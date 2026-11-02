@@ -53,7 +53,12 @@ def scenario_covs(R, scenarios=("long", "short", "stress"), short_len=63):
         elif sc == "stress":
             sd = np.sqrt(np.diag(base))
             corr = base / np.outer(sd, sd)
-            out.append(np.abs(corr) * np.outer(sd, sd))     # hedges fail: all correlations >= 0
+            stress = np.abs(corr)                           # hedges fail: all correlations >= 0
+            vals, vecs = np.linalg.eigh(stress)              # |rho| need not be PSD: clip eigenvalues
+            stress = (vecs * np.clip(vals, 1e-6, None)) @ vecs.T
+            dd = np.sqrt(np.diag(stress))
+            stress = stress / np.outer(dd, dd)
+            out.append(stress * np.outer(sd, sd))
         else:
             raise ValueError(sc)
     return out
@@ -65,7 +70,10 @@ def ca_hrp_robust(R, c, w_prev, scenarios=("long", "short", "stress"), aggregate
     minimise the worst-case tracking error across covariance regimes."""
     covs = scenario_covs(R, scenarios, short_len)
     res = hrp(covs[0], "single", "list")
-    return optim.robust_projection(res.weights, covs, c, w_prev, aggregate)
+    w = optim.robust_projection(res.weights, covs, c, w_prev, aggregate)
+    if w is res.weights:      # solver failure: fall back to the single-covariance projection
+        w = optim.risk_projection(res.weights, covs[0], c, w_prev)
+    return w
 
 
 def build_strategies() -> Dict[str, Strategy]:

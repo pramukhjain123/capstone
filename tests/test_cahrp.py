@@ -83,3 +83,33 @@ def test_backtest_charges_costs_and_keeps_every_day():
     assert res.turnover.iloc[1:].min() > 1.5
     diff = res.gross.sum() - res.net(50).sum()
     assert np.isclose(diff, res.turnover.iloc[1:].sum() * 50 / 1e4)
+
+
+@pytest.mark.parametrize("seed", range(5))
+def test_robust_projection_feasible_and_bounds_hull(seed):
+    from cahrp.strategies import ca_hrp_robust, scenario_covs
+    R, groups = random_problem(seed)
+    c = make_constraints(groups, upper=0.12, group_max=0.30, turnover_max=None)
+    w = ca_hrp_robust(R, c, None, ("long", "short", "stress"), "max")
+    assert violations(w, c)["any"] == 0
+    covs = scenario_covs(R, ("long", "short", "stress"))
+    tgt = hrp(covs[0]).weights
+    d = w - tgt
+    scale = len(w) / np.trace(covs[0])
+    vals = [d @ (S * scale) @ d for S in covs]
+    lam = np.random.default_rng(seed).dirichlet(np.ones(3))
+    mix = sum(l * S for l, S in zip(lam, covs)) * scale
+    assert d @ mix @ d <= max(vals) + 1e-9
+
+
+def test_split_glitch_repair():
+    import pandas as pd
+    from cahrp.backtest import repair_split_glitches
+    idx = pd.bdate_range("2020-01-01", periods=10)
+    x = np.linspace(100, 110, 10)
+    bad = x.copy()
+    bad[4:6] /= 10                       # temporary unadjusted split for two days
+    p = pd.DataFrame({"a": bad, "b": x}, index=idx)
+    fixed = repair_split_glitches(p)
+    assert np.allclose(fixed["a"].values, x)
+    assert np.allclose(fixed["b"].values, x)

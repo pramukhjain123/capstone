@@ -40,7 +40,11 @@ def repair_split_glitches(prices: pd.DataFrame, log: list = None) -> pd.DataFram
         for i in np.where(r < -0.8)[0]:
             for j in range(i + 1, min(i + 11, len(r))):
                 if r[j] > 3 and abs((1 + r[i]) * (1 + r[j]) - 1) < 0.3:
-                    f = 1.0 / (1 + r[i])
+                    f = np.sqrt((1 + r[j]) / (1 + r[i]))       # uses both jumps
+                    for ratio in (2, 3, 4, 5, 10, 20, 25, 50, 100):
+                        if abs(f / ratio - 1) < 0.05:          # snap to a standard split ratio
+                            f = float(ratio)
+                            break
                     x[i + 1: j + 1] *= f
                     if log is not None:
                         log.append((col, p.index[i + 1].date(), p.index[j].date(), round(f, 2)))
