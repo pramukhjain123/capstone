@@ -1,0 +1,88 @@
+\section{Introduction}\label{sec:intro}
+
+Mean--variance optimisation \citep{markowitz1952} is the textbook answer to portfolio
+construction, yet in practice its outputs are notoriously unstable: small errors in
+estimated means and covariances are amplified by the inversion of an ill-conditioned
+covariance matrix into extreme, concentrated and rapidly changing weights
+\citep{michaud1989,chopra1993}. Out of sample, optimised portfolios frequently fail to beat
+naive equal weighting \citep{demiguel2009}. Two families of remedies have emerged. The first
+regularises the inputs, for example by shrinking the covariance matrix
+\citep{ledoit2004} or by imposing weight constraints, which \citet{jagannathan2003} show
+act as a form of shrinkage. The second abandons optimisation altogether in favour of
+heuristic risk allocation, such as equal risk contribution \citep{maillard2010}.
+
+Hierarchical Risk Parity (HRP), introduced by \citet{lopezdeprado2016}, belongs to the
+second family and has become one of the most popular allocation methods among
+practitioners and in open-source libraries. HRP clusters assets by correlation, orders them
+so that similar assets are adjacent, and allocates capital top-down by recursively splitting
+each cluster in inverse proportion to its risk. Because it never inverts the covariance
+matrix, HRP is robust to estimation noise and can handle singular covariance matrices.
+
+HRP has, however, a practical blind spot: it cannot respect constraints. Real mandates
+impose per-asset limits (UCITS concentration rules, single-stock caps), sector or
+asset-class caps and floors (investment policy statements), and turnover budgets (to control
+trading costs). Recursive bisection has no mechanism for any of these, and in our
+multi-asset universe unconstrained HRP places on average 86\% of capital in a single
+short-term bond fund, breaching a 15\% single-fund cap and a 40\% asset-class cap at
+\emph{every} rebalance. The usual fixes are ad hoc: weights are clipped and renormalised,
+which can cycle without ever reaching the feasible set, or projected onto it with a
+Euclidean distance that ignores how assets co-move.
+
+This paper proposes \textbf{Constraint-Aware Hierarchical Risk Parity (CA-HRP)}, a
+principled way to keep HRP's risk allocation while satisfying any set of linear
+constraints exactly. Our contributions are:
+\begin{enumerate}
+\item \textbf{Capacity-aware recursive bisection.} We define a capacity interval for every
+node of the HRP tree and clip each split into it. We prove that the interval is never
+empty and that per-asset bounds are met exactly, with no solver
+(Proposition~\ref{prop:box}). This yields a solver-free variant, CA-HRP-B.
+\item \textbf{Tracking-error projection.} We map the HRP target to the feasible portfolio
+with minimum ex-ante tracking error to it. We show the projection is unique, leaves
+compliant HRP portfolios unchanged, and redistributes excess weight as a covariance-based
+hedge rather than uniformly (Proposition~\ref{prop:te}).
+\item \textbf{A transparent evaluation protocol.} The method design was selected on a
+validation period only and then frozen; we report a separate held-out test period, all
+constraint sets were fixed before any backtest was run, and all code and data are public.
+\item \textbf{Evidence on three universes.} On 20 multi-asset ETFs (2008--2026), 43 NIFTY~50
+stocks (2011--2026) and 47 US large caps (2006--2026), CA-HRP satisfies every constraint at
+every rebalance. Where constraints bind, it is the strongest member of the HRP family and
+is competitive with constrained minimum variance; where they rarely bind, it matches HRP.
+\end{enumerate}
+
+The rest of the paper is organised as follows. Section~\ref{sec:related} reviews related
+work, Section~\ref{sec:setting} states the problem, Section~\ref{sec:method} presents the
+method and its properties, Section~\ref{sec:design} describes the data and experimental
+protocol, Section~\ref{sec:results} reports results, and Section~\ref{sec:conclusion}
+concludes.
+
+\section{Related Work}\label{sec:related}
+
+\paragraph{Estimation error and robust allocation.} The sensitivity of mean--variance
+portfolios to input error is well documented \citep{michaud1989,chopra1993}.
+\citet{demiguel2009} find that across many data sets none of fourteen optimised models
+consistently beats $1/N$ out of sample. Shrinkage estimators \citep{ledoit2004} reduce the
+condition number of the covariance matrix, and \citet{jagannathan2003} show that
+no-short-sale constraints behave like covariance shrinkage. Risk-based methods allocate by
+risk rather than expected return; the equal-risk-contribution (ERC) portfolio
+\citep{maillard2010} equalises marginal risk contributions and can be computed by convex
+optimisation \citep{spinu2013}.
+
+\paragraph{Hierarchical allocation.} \citet{lopezdeprado2016} introduced HRP, combining
+graph-theoretic clustering with recursive inverse-variance bisection. \citet{raffinot2017}
+studied hierarchical clustering-based allocation more broadly, and \citet{raffinot2018}
+proposed the Hierarchical Equal Risk Contribution (HERC) portfolio, which splits along the
+dendrogram rather than the ordered list. \citet{pfitzinger2019} recognised that HRP lacks
+constraint handling and proposed a cluster-based capital allocation that accommodates
+weight bounds within the bisection.
+
+\paragraph{Positioning of this work.} Capacity-aware bisection is closest in spirit to
+\citet{pfitzinger2019}; our contribution is a capacity definition that also incorporates
+group caps, together with a short proof of non-emptiness and exact box feasibility based on
+the additivity and sub-additivity of the capacity bounds. More importantly, we show
+empirically that enforcing constraints \emph{inside} the bisection has a hidden cost: excess
+weight cascades down one branch and can concentrate in volatile assets. Our main method
+therefore separates the two concerns: HRP supplies the risk allocation, and a
+tracking-error projection \citep{roll1992} enforces arbitrary linear constraints
+(group floors, caps and turnover) with minimum risk distortion. To our knowledge this is
+the first study to compare constraint-handling strategies for HRP under a common,
+pre-registered protocol with a held-out test period.

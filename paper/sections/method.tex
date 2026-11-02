@@ -1,0 +1,158 @@
+\section{Problem Setting}\label{sec:setting}
+
+We consider $N$ risky assets with daily simple returns $r_t\in\mathbb{R}^N$. At each
+rebalancing date the manager observes the last $L$ return vectors, estimates a covariance
+matrix $\hat\Sigma$, and chooses weights $w\in\mathbb{R}^N$. The mandate imposes a
+polyhedral feasible set
+\begin{equation}\label{eq:feasible}
+\mathcal{W}(w^-)=\Bigl\{w:\ \mathbf{1}^\top w=1,\ \ \ell\le w\le u,\ \
+\underline{c}_g\le \sum_{i\in g} w_i\le \bar c_g\ \ \forall g\in\mathcal{G},\ \
+\lVert w-w^-\rVert_1\le\tau\Bigr\},
+\end{equation}
+where $\ell,u$ are per-asset bounds, $\mathcal{G}$ partitions the assets into groups
+(sectors or asset classes) with caps $\bar c_g$ and floors $\underline{c}_g$, $w^-$ is the
+drifted pre-trade portfolio and $\tau$ a turnover budget. All constraints are linear, so
+$\mathcal{W}$ is a convex polytope. We assume it is non-empty. The turnover budget can in
+principle conflict with the other constraints if price drift pushes the pre-trade
+portfolio far outside the box or group limits; our implementation then relaxes the
+turnover cap for that date only. In all experiments reported here this fallback was never
+triggered: every CA-HRP portfolio satisfied all constraints, turnover included.
+
+\section{Method}\label{sec:method}
+
+\subsection{Hierarchical Risk Parity}
+HRP \citep{lopezdeprado2016} proceeds in three steps. (i)~\emph{Tree clustering}: the
+correlation matrix $\rho$ implied by $\hat\Sigma$ is mapped to the distance
+$d_{ij}=\sqrt{(1-\rho_{ij})/2}$ and agglomerated with single linkage. (ii)~\emph{Quasi-
+diagonalisation}: assets are ordered by the dendrogram leaves so that similar assets are
+adjacent. (iii)~\emph{Recursive bisection}: starting from the full ordered list with weight
+$W=1$, every cluster $C$ is split into a left and right half $C_L,C_R$; with
+$V_S=\tilde w_S^\top\hat\Sigma_{SS}\tilde w_S$ the variance of the inverse-variance portfolio
+$\tilde w_S\propto\operatorname{diag}(\hat\Sigma_{SS})^{-1}$ of a cluster $S$, the split
+fraction is
+\begin{equation}\label{eq:alpha}
+\alpha_C = 1-\frac{V_{C_L}}{V_{C_L}+V_{C_R}},\qquad
+W_{C_L}=\alpha_C W_C,\quad W_{C_R}=(1-\alpha_C)W_C .
+\end{equation}
+The recursion ends at single assets. No matrix is inverted and every split is a
+two-asset risk-parity decision, which is the source of HRP's stability. Nothing in
+\eqref{eq:alpha}, however, knows about $\mathcal{W}$.
+
+\subsection{Capacity-aware recursive bisection (CA-HRP-B)}
+Our first contribution makes the bisection itself respect per-asset bounds and, partially,
+group caps, without any optimisation solver. For a set of assets $S$ define its
+\emph{capacity interval}
+\begin{equation}\label{eq:capacity}
+\mathrm{lo}(S)=\sum_{i\in S}\ell_i,\qquad
+\mathrm{hi}(S)=\sum_{g\in\mathcal{G}}\min\Bigl(\sum_{i\in S\cap g}u_i,\ \bar c_g\Bigr).
+\end{equation}
+$\mathrm{lo}(S)$ is the least weight that $S$ must hold and $\mathrm{hi}(S)$ an upper
+bound on what it can hold. When a cluster $C$ carrying weight $W_C$ is split, the HRP
+fraction \eqref{eq:alpha} is clipped to
+\begin{equation}\label{eq:clip}
+\alpha_C\in\Bigl[\tfrac{\max(\mathrm{lo}(C_L),\,W_C-\mathrm{hi}(C_R))}{W_C},\ \
+\tfrac{\min(\mathrm{hi}(C_L),\,W_C-\mathrm{lo}(C_R))}{W_C}\Bigr].
+\end{equation}
+
+\begin{proposition}[Exact box feasibility]\label{prop:box}
+If $\mathrm{lo}(\{1,\dots,N\})\le 1\le \mathrm{hi}(\{1,\dots,N\})$, the interval
+\eqref{eq:clip} is non-empty at every split, and the resulting weights satisfy
+$\mathbf{1}^\top w=1$ and $\ell_i\le w_i\le\min(u_i,\bar c_{g(i)})$ for all $i$.
+\end{proposition}
+\begin{proof}
+We show by induction that every cluster satisfies the invariant
+$\mathrm{lo}(C)\le W_C\le \mathrm{hi}(C)$. It holds at the root by assumption. Note that
+$\mathrm{lo}$ is additive, $\mathrm{lo}(C)=\mathrm{lo}(C_L)+\mathrm{lo}(C_R)$, and
+$\mathrm{hi}$ is sub-additive because $\min(a+b,c)\le\min(a,c)+\min(b,c)$ for
+$a,b,c\ge0$, so $\mathrm{hi}(C)\le\mathrm{hi}(C_L)+\mathrm{hi}(C_R)$. The interval
+\eqref{eq:clip} (multiplied by $W_C$) is non-empty iff the four inequalities
+$\mathrm{lo}(C_L)\le\mathrm{hi}(C_L)$, $\mathrm{lo}(C_L)\le W_C-\mathrm{lo}(C_R)$,
+$W_C-\mathrm{hi}(C_R)\le\mathrm{hi}(C_L)$ and $W_C-\mathrm{hi}(C_R)\le W_C-\mathrm{lo}(C_R)$
+hold. The first and last follow from $\ell\le u$; the second from
+$W_C\ge\mathrm{lo}(C)$ and additivity; the third from $W_C\le\mathrm{hi}(C)$ and
+sub-additivity. Any $\alpha_C$ in the interval gives children with
+$\mathrm{lo}(C_L)\le W_{C_L}\le\mathrm{hi}(C_L)$ and likewise for $C_R$, which preserves
+the invariant. At a leaf $\{i\}$, $\mathrm{lo}=\ell_i$ and $\mathrm{hi}=\min(u_i,\bar
+c_{g(i)})$, which proves the claim. Weights sum to one because each split conserves
+$W_C$.
+\end{proof}
+
+CA-HRP-B costs $O(N^2)$ beyond HRP and needs no solver. It guarantees box bounds exactly,
+but group constraints are only respected when a group lies inside one sub-tree, and group
+floors and turnover are not handled. Those remaining constraints are enforced by a light
+projection (next subsection, with the Euclidean metric replaced by a tree-weighted one;
+details in the code). As our experiments show, the price of handling constraints
+\emph{inside} the bisection is that excess weight cascades down a single branch of the
+tree and can end up concentrated in volatile assets; this motivates the main method.
+
+\subsection{Tracking-error projection (CA-HRP)}
+The key observation is that HRP produces an excellent \emph{target} but has no notion of
+distance between portfolios. Practitioners close the gap by clipping and renormalising,
+which is not guaranteed to reach $\mathcal{W}$, or by a Euclidean projection
+$\min_{w\in\mathcal{W}}\lVert w-w^{\mathrm{HRP}}\rVert_2^2$, which treats a unit of weight
+moved from a short-term bond fund to an oil fund the same as one moved to another bond fund.
+We instead measure distance in \emph{risk}: the ex-ante tracking-error variance of the
+constrained portfolio relative to HRP \citep{roll1992},
+\begin{equation}\label{eq:te}
+w^{\mathrm{CA}}=\arg\min_{w\in\mathcal{W}(w^-)}\ (w-w^{\mathrm{HRP}})^\top\,\bar\Sigma\,
+(w-w^{\mathrm{HRP}}),\qquad
+\bar\Sigma=\frac{N\hat\Sigma_{\mathrm{LW}}}{\operatorname{tr}\hat\Sigma_{\mathrm{LW}}}+\epsilon I,
+\end{equation}
+where $\hat\Sigma_{\mathrm{LW}}$ is the Ledoit--Wolf shrinkage estimator
+\citep{ledoit2004}, $w^{\mathrm{HRP}}$ is HRP computed on $\hat\Sigma_{\mathrm{LW}}$, and
+the small ridge $\epsilon=10^{-4}$ guarantees strict convexity.
+
+\begin{proposition}[Properties of the projection]\label{prop:te}
+(a) If $\mathcal{W}(w^-)\neq\emptyset$, problem \eqref{eq:te} has a unique solution.
+(b) If $w^{\mathrm{HRP}}\in\mathcal{W}(w^-)$ then $w^{\mathrm{CA}}=w^{\mathrm{HRP}}$:
+CA-HRP never alters HRP when HRP already complies.
+(c) Among all feasible portfolios, $w^{\mathrm{CA}}$ minimises the ex-ante variance of
+the return difference to HRP, so it is the feasible portfolio whose returns are most
+correlated with, and least volatile around, the HRP portfolio.
+(d) Let $A w\le b$ collect the active inequality constraints and $\mathbf 1^\top w=1$ the
+budget. The KKT conditions give
+$w^{\mathrm{CA}}=w^{\mathrm{HRP}}-\tfrac12\bar\Sigma^{-1}(A^\top\lambda+\nu\mathbf{1})$
+with $\lambda\ge0$: the correction is a \emph{hedge}. Weight removed from a capped
+asset is redistributed in proportion to the rows of $\bar\Sigma^{-1}$, i.e.\ towards the
+assets that best replicate the capped asset's risk.
+\end{proposition}
+\begin{proof}
+(a) $\bar\Sigma\succ0$, so the objective is strictly convex and $\mathcal{W}$ is a non-empty
+closed convex set; a unique minimiser exists. (b) The objective is non-negative and zero at
+$w^{\mathrm{HRP}}$. (c) $(w-w^{\mathrm{HRP}})^\top\hat\Sigma(w-w^{\mathrm{HRP}})$ is the
+variance of $(w-w^{\mathrm{HRP}})^\top r$ under the estimated covariance; the trace
+normalisation and ridge only rescale and regularise it. (d) Stationarity of the
+Lagrangian $(w-w^{\mathrm{HRP}})^\top\bar\Sigma(w-w^{\mathrm{HRP}})+\lambda^\top(Aw-b)
++\nu(\mathbf{1}^\top w-1)$, with the $\ell_1$ turnover constraint written in its standard
+linear epigraph form.
+\end{proof}
+
+Part (d) explains the behaviour we observe in the multi-asset universe: when HRP wants far
+more than the 40\% asset-class cap in bonds, the Euclidean projection spreads the excess
+almost uniformly (about 5\% to each non-bond fund), while the tracking-error projection
+re-shapes the portfolio as a hedge: inside the bond budget it moves from short-term to
+intermediate and long Treasuries (IEF, TLT), whose negative correlation with equities
+offsets the risk of the assets that must now be held, and outside the bond budget it
+favours gold and broad commodities (Section~\ref{sec:results}). The constrained portfolio
+keeps the defensive character of HRP, with markedly lower volatility than the Euclidean
+alternative.
+
+\begin{algorithm}[t]
+\caption{Constraint-Aware HRP (one rebalancing date)}\label{alg:cahrp}
+\begin{algorithmic}[1]
+\Require returns window $R\in\mathbb{R}^{L\times N}$, feasible set $\mathcal{W}$, drifted weights $w^-$
+\State $\hat\Sigma_{\mathrm{LW}}\gets$ Ledoit--Wolf shrinkage covariance of $R$
+\State $\rho\gets$ correlation of $\hat\Sigma_{\mathrm{LW}}$;\ \ $d_{ij}\gets\sqrt{(1-\rho_{ij})/2}$
+\State $\pi\gets$ leaf order of the single-linkage dendrogram of $d$
+\State $w^{\mathrm{HRP}}\gets$ recursive bisection \eqref{eq:alpha} on $\pi$
+\Comment{optionally clipped by \eqref{eq:clip}}
+\State $w^{\mathrm{CA}}\gets$ solve the convex QP \eqref{eq:te} over $\mathcal{W}(w^-)$
+\State \Return $w^{\mathrm{CA}}$
+\end{algorithmic}
+\end{algorithm}
+
+\paragraph{Complexity.} Steps 1--4 cost $O(LN^2+N^2\log N)$. Step~5 is a QP with $N$
+variables (plus $N$ auxiliary variables for the turnover epigraph) and $N+|\mathcal{G}|$
+linear constraints; with an interior-point solver \citep{diamond2016} it takes a few
+milliseconds for $N\le 50$. A full 20-year monthly backtest of CA-HRP runs in under
+six seconds on a laptop.

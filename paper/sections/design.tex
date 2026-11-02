@@ -1,0 +1,68 @@
+\section{Experimental Design}\label{sec:design}
+
+\paragraph{Data.} We use daily dividend- and split-adjusted closing prices from Yahoo
+Finance for three universes chosen to span different constraint regimes
+(Table~\ref{tab:universes}): (i)~20 US-listed multi-asset ETFs covering equities, government
+and corporate bonds, commodities and real estate (January 2008 -- October 2026);
+(ii)~43 long-listed constituents of India's NIFTY~50 index across 12 sectors
+(January 2011 -- October 2026); (iii)~47 US large-cap stocks across 11 sectors
+(January 2006 -- October 2026). All series are complete over their sample. Survivorship
+bias affects the stock universes, which consist of current large caps; it affects all
+methods equally and does not change their ranking, which is our object of study.
+
+\begin{table}[t]
+\centering\small
+\caption{Universes and constraint sets. Constraint sets were fixed before any backtest.}
+\label{tab:universes}
+\begin{tabular}{lccc}
+\toprule
+ & Multi-asset ETFs & NIFTY 50 stocks & US large caps\\
+\midrule
+Assets / groups & 20 / 4 & 43 / 12 & 47 / 11\\
+Sample & 2008--2026 & 2011--2026 & 2006--2026\\
+Per-asset cap $u_i$ & 15\% & 6\% & 6\%\\
+Group cap $\bar c_g$ & 40\% & 25\% & 20\%\\
+Group floor $\underline c_g$ & Equity $\ge$ 20\% & -- & --\\
+Turnover budget $\tau$ (per month) & 30\% & 30\% & 30\%\\
+Validation / test split & 2016 | 2017-- & 2018 | 2019-- & 2015 | 2016--\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Constraints.} The constraint sets mirror typical mandates: a single-holding cap
+of roughly $2.5/N$, sector or asset-class caps, a growth floor of 20\% in equities for the
+multi-asset portfolio, and a monthly two-sided turnover budget of 30\%. All weights are
+long-only and fully invested.
+
+\paragraph{Methods compared.} \emph{Unconstrained references}: equal weight (EW),
+inverse variance (IVP), long-only minimum variance (MinVar), equal risk contribution (ERC)
+and standard HRP. \emph{Constrained competitors}: minimum variance (MinVar-C) and
+mean--variance with risk aversion 5 (MVO-C), both solved over the full feasible set;
+HRP with iterative clipping and renormalisation (HRP-Clip, the common practitioner fix,
+which ignores turnover); and HRP followed by Euclidean projection onto the full feasible set
+(HRP-Proj). \emph{Proposed}: the solver-free capacity-aware bisection (CA-HRP-B) and the
+full method with tracking-error projection (CA-HRP). Covariance-based competitors use the
+Ledoit--Wolf estimator, except the HRP baselines, which follow the original sample-covariance
+recipe.
+
+\paragraph{Backtest protocol.} At each month end we estimate inputs from the previous
+$L=252$ trading days, compute target weights, and trade at the close. Between rebalances
+weights drift with prices. Turnover is $\lVert w_t-w_t^-\rVert_1$ against the drifted
+weights, and a cost of 10\,bps per unit of turnover is deducted (we also report 0, 25 and
+50\,bps). Constraint compliance is checked on the target weights at every rebalance.
+
+\paragraph{Design selection and held-out test.} An initial version of CA-HRP enforced
+all constraints inside the bisection followed by a tree-weighted projection. Before
+finalising the method, we compared eight configurations \emph{on the validation period
+only} (first part of each sample, Table~\ref{tab:universes}) and selected the
+tracking-error projection with Ledoit--Wolf covariance (Appendix~\ref{app:design}). The
+configuration was then frozen, and we report results both over the full sample and over the
+untouched test period.
+
+\paragraph{Metrics.} Annualised return (CAGR), volatility, Sharpe ratio (zero risk-free
+rate), maximum drawdown, daily 5\% CVaR, annualised turnover, constraint-violation rate
+(share of rebalances with any breach), realised tracking error to unconstrained HRP
+(TE$_{\text{HRP}}$), effective number of holdings $1/\sum_i w_i^2$, and risk concentration,
+the Herfindahl index of percentage risk contributions scaled by $N$ (1 = equal risk). Sharpe
+ratio differences are tested with a circular block bootstrap (block of 21 days, 2{,}000
+replications) in the spirit of \citet{ledoit2008} and \citet{politis1994}.
