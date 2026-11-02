@@ -106,6 +106,48 @@ def risk_projection(target: np.ndarray, cov: np.ndarray, c: Constraints,
     return _solve(cp.Minimize(obj), w, c, w_prev, fallback=target)
 
 
+def robust_projection(target: np.ndarray, covs: List[np.ndarray], c: Constraints,
+                      w_prev: Optional[np.ndarray] = None, aggregate: str = "max",
+                      ridge: float = 1e-4) -> np.ndarray:
+    """Regime-robust tracking-error projection (this project).
+
+        min_w  max_k (w - w*)' S_k (w - w*)      (aggregate="max")
+        min_w  mean_k (w - w*)' S_k (w - w*)     (aggregate="mean")
+        s.t.   w feasible
+
+    Every scenario covariance is scaled by the same factor (that of the first one),
+    so relative risk levels across regimes are preserved. Because the tracking-error
+    variance is linear in S, the "max" solution bounds the tracking error under every
+    covariance matrix in the convex hull of the scenarios.
+    """
+    n = len(target)
+    scale = n / np.trace(covs[0])
+    w = cp.Variable(n)
+    d = w - target
+    terms = [cp.quad_form(d, cp.psd_wrap(0.5 * (S + S.T) * scale + ridge * np.eye(n))) for S in covs]
+    if aggregate == "max":
+        t = cp.Variable()
+        obj = cp.Minimize(t)
+        # epigraph form is handled by adding the extra constraints through _solve_extra
+        return _solve_extra(obj, w, c, w_prev, [tk <= t for tk in terms], fallback=target)
+    obj = cp.Minimize(sum(terms) / len(terms))
+    return _solve(obj, w, c, w_prev, fallback=target)
+
+
+def _solve_extra(objective, w, c, w_prev, extra, fallback):
+    for use_to in (True, False):
+        prob = cp.Problem(objective, _constraint_list(w, c, w_prev, use_to) + extra)
+        for solver in ("CLARABEL", "SCS"):
+            try:
+                prob.solve(solver=solver)
+            except Exception:
+                continue
+            if w.value is not None and prob.status in ("optimal", "optimal_inaccurate"):
+                x = np.clip(np.asarray(w.value).ravel(), 0, None)
+                return x / x.sum()
+    return fallback
+
+
 def euclidean_projection(target: np.ndarray, c: Constraints,
                          w_prev: Optional[np.ndarray] = None) -> np.ndarray:
     w = cp.Variable(len(target))

@@ -14,7 +14,7 @@ import yfinance as yf
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from cahrp.universes import UNIVERSES  # noqa: E402
+from cahrp.universes import ALL_UNIVERSES  # noqa: E402
 
 END = "2026-10-31"
 
@@ -39,7 +39,10 @@ def fetch(ticker: str, start: str) -> pd.Series:
 def main():
     out = ROOT / "data" / "raw"
     out.mkdir(parents=True, exist_ok=True)
-    for name, spec in UNIVERSES.items():
+    only = sys.argv[1:]
+    for name, spec in ALL_UNIVERSES.items():
+        if only and name not in only:
+            continue
         print(f"[{name}] {len(spec['assets'])} tickers from {spec['start']}")
         series = []
         for t in spec["assets"]:

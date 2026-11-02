@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 
 from .constraints import Constraints, make_constraints, violations
-from .universes import UNIVERSES
+from .universes import EXTERNAL_UNIVERSES, UNIVERSES
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -17,13 +17,44 @@ CONSTRAINT_SPECS = {
     "etf": dict(upper=0.15, group_max=0.40, group_min={"Equity": 0.20}, turnover_max=0.30),
     "nifty": dict(upper=0.06, group_max=0.25, group_min=None, turnover_max=0.30),
     "us": dict(upper=0.06, group_max=0.20, group_min=None, turnover_max=0.30),
+    # external-validation universes (fixed before running any backtest on them)
+    "india_etf": dict(upper=0.35, group_max=0.80, group_min={"IndiaEquity": 0.40}, turnover_max=0.30,
+                      group_max_overrides={"Gold": 0.25, "GlobalEquity": 0.35}),
+    "sector": dict(upper=0.20, group_max=0.60, group_min=None, turnover_max=0.30,
+                   group_max_overrides={"Defensive": 0.50}),
+    "country": dict(upper=0.10, group_max=0.40, group_min=None, turnover_max=0.30),
 }
+
+
+def repair_split_glitches(prices: pd.DataFrame, log: list = None) -> pd.DataFrame:
+    """Undo temporary unadjusted stretches around unit splits.
+
+    Yahoo occasionally records a split on day i (return ~ -90%) and reverses it a few
+    days later (return ~ +900%). We detect a fall below -80% followed within 10 days by a
+    rise that cancels it to within 30%, and rescale the prices in between.
+    """
+    p = prices.copy()
+    for col in p.columns:
+        x = p[col].values.astype(float)
+        r = x[1:] / x[:-1] - 1
+        for i in np.where(r < -0.8)[0]:
+            for j in range(i + 1, min(i + 11, len(r))):
+                if r[j] > 3 and abs((1 + r[i]) * (1 + r[j]) - 1) < 0.3:
+                    f = 1.0 / (1 + r[i])
+                    x[i + 1: j + 1] *= f
+                    if log is not None:
+                        log.append((col, p.index[i + 1].date(), p.index[j].date(), round(f, 2)))
+                    r = x[1:] / x[:-1] - 1
+                    break
+        p[col] = x
+    return p
 
 
 def load_universe(name: str):
     prices = pd.read_csv(ROOT / "data" / "raw" / f"{name}_prices.csv", index_col=0, parse_dates=True)
     groups = pd.read_csv(ROOT / "data" / "raw" / f"{name}_groups.csv", index_col=0)["group"]
     prices = prices[groups.index].ffill().dropna(how="any")
+    prices = repair_split_glitches(prices)
     rets = prices.pct_change().iloc[1:]
     return rets, list(groups.values)
 
@@ -49,16 +80,26 @@ class BacktestResult:
         return r - cost
 
 
-def rebalance_dates(index: pd.DatetimeIndex, lookback: int) -> List[pd.Timestamp]:
-    month_end = pd.Series(index, index=index).groupby([index.year, index.month]).max().values
-    return [d for d in month_end if index.get_loc(d) >= lookback]
+def rebalance_dates(index: pd.DatetimeIndex, lookback: int, freq: str = "M") -> List[pd.Timestamp]:
+    s = pd.Series(index, index=index)
+    if freq == "M":
+        ends = s.groupby([index.year, index.month]).max().values
+    elif freq == "Q":
+        ends = s.groupby([index.year, (index.month - 1) // 3]).max().values
+    elif freq == "W":
+        iso = index.isocalendar()
+        ends = s.groupby([iso.year.values, iso.week.values]).max().values
+    else:
+        raise ValueError(freq)
+    return sorted(d for d in ends if index.get_loc(d) >= lookback)
 
 
-def run_backtest(rets: pd.DataFrame, strategy, c: Constraints, lookback: int = 252) -> BacktestResult:
+def run_backtest(rets: pd.DataFrame, strategy, c: Constraints, lookback: int = 252,
+                 freq: str = "M") -> BacktestResult:
     idx = rets.index
     R = rets.values
     n = R.shape[1]
-    rebal = set(rebalance_dates(idx, lookback))
+    rebal = set(rebalance_dates(idx, lookback, freq))
     first = min(rebal)
     start = idx.get_loc(first)
 
@@ -96,3 +137,11 @@ def run_backtest(rets: pd.DataFrame, strategy, c: Constraints, lookback: int = 2
 
 def universe_names():
     return list(UNIVERSES.keys())
+
+
+def external_universe_names():
+    return list(EXTERNAL_UNIVERSES.keys())
+
+
+def all_universe_names():
+    return universe_names() + external_universe_names()

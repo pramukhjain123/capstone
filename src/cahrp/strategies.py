@@ -41,6 +41,33 @@ def ca_hrp(R, c, w_prev, cov_method="lw", linkage_method="single", split="list",
     raise ValueError(metric)
 
 
+def scenario_covs(R, scenarios=("long", "short", "stress"), short_len=63):
+    """Covariance scenarios for the regime-robust projection."""
+    base = estimate(R, "lw")
+    out = []
+    for sc in scenarios:
+        if sc == "long":
+            out.append(base)
+        elif sc == "short":
+            out.append(estimate(R[-short_len:], "lw"))
+        elif sc == "stress":
+            sd = np.sqrt(np.diag(base))
+            corr = base / np.outer(sd, sd)
+            out.append(np.abs(corr) * np.outer(sd, sd))     # hedges fail: all correlations >= 0
+        else:
+            raise ValueError(sc)
+    return out
+
+
+def ca_hrp_robust(R, c, w_prev, scenarios=("long", "short", "stress"), aggregate="max",
+                  short_len=63):
+    """Regime-robust CA-HRP: HRP target on the long-window LW covariance, projected so as to
+    minimise the worst-case tracking error across covariance regimes."""
+    covs = scenario_covs(R, scenarios, short_len)
+    res = hrp(covs[0], "single", "list")
+    return optim.robust_projection(res.weights, covs, c, w_prev, aggregate)
+
+
 def build_strategies() -> Dict[str, Strategy]:
     s: Dict[str, Strategy] = {}
     # ---- unconstrained reference methods ----
@@ -60,7 +87,12 @@ def build_strategies() -> Dict[str, Strategy]:
     # ---- proposed ----
     s["CA-HRP-B"] = lambda R, c, wp: ca_hrp(R, c, wp, capacity=True, metric="tree")
     s["CA-HRP"] = lambda R, c, wp: ca_hrp(R, c, wp)
+    s["CA-HRP-R"] = lambda R, c, wp: ca_hrp_robust(R, c, wp, **ROBUST_CONFIG)
     return s
+
+
+# Fixed by scripts/design_study_robust.py on the validation period (see paper, Appendix)
+ROBUST_CONFIG = dict(scenarios=("long", "short"), aggregate="max")
 
 
 def build_ablations() -> Dict[str, Strategy]:

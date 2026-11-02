@@ -55,6 +55,28 @@ def structure(weights: pd.DataFrame, rets: pd.DataFrame, lookback: int = 252) ->
     return {"EffN": float(np.mean(effn)), "RiskConc": float(np.mean(rcon))}
 
 
+def sharpe_diff_ci(r1: pd.Series, r2: pd.Series, block: int = 21, n_boot: int = 2000,
+                   seed: int = 0, level: float = 0.95):
+    """Annualised Sharpe difference with a circular-block-bootstrap percentile interval."""
+    rng = np.random.default_rng(seed)
+    x = np.column_stack([r1.values, r2.values])
+    T = len(x)
+    ann = np.sqrt(ANN)
+
+    def d(a):
+        s = a.mean(0) / a.std(0) * ann
+        return s[0] - s[1]
+
+    nb = int(np.ceil(T / block))
+    boots = np.empty(n_boot)
+    for b in range(n_boot):
+        starts = rng.integers(0, T, nb)
+        ids = (starts[:, None] + np.arange(block)[None, :]).ravel()[:T] % T
+        boots[b] = d(x[ids])
+    lo, hi = np.quantile(boots, [(1 - level) / 2, 1 - (1 - level) / 2])
+    return float(d(x)), float(lo), float(hi), float(np.mean(boots > 0))
+
+
 def sharpe_diff_test(r1: pd.Series, r2: pd.Series, block: int = 21, n_boot: int = 2000,
                      seed: int = 0) -> float:
     """Two-sided p-value for Sharpe(r1) - Sharpe(r2) = 0 via stationary block bootstrap

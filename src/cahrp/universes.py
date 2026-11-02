@@ -55,3 +55,32 @@ UNIVERSES = {
     "nifty": {"assets": NIFTY_STOCKS, "start": "2011-01-01", "label": "NIFTY 50 stocks"},
     "us": {"assets": US_LARGE_CAPS, "start": "2006-01-01", "label": "US large caps"},
 }
+
+# ---- External-validation universes (added after the main study; never used for design) ----
+INDIA_ETF = {
+    "NIFTYBEES.NS": "IndiaEquity", "BANKBEES.NS": "IndiaEquity", "JUNIORBEES.NS": "IndiaEquity",
+    "PSUBNKBEES.NS": "IndiaEquity", "MON100.NS": "GlobalEquity", "GOLDBEES.NS": "Gold",
+}
+
+US_SECTOR_ETF = {
+    "XLK": "Cyclical", "XLF": "Cyclical", "XLY": "Cyclical", "XLI": "Cyclical",
+    "XLB": "Cyclical", "XLE": "Cyclical",
+    "XLV": "Defensive", "XLP": "Defensive", "XLU": "Defensive", "IYR": "Defensive",
+}
+
+GLOBAL_COUNTRY_ETF = {
+    "EWG": "Europe", "EWU": "Europe", "EWQ": "Europe", "EWP": "Europe", "EWI": "Europe",
+    "EWL": "Europe", "EWN": "Europe", "EWD": "Europe",
+    "EWJ": "AsiaPacific", "EWA": "AsiaPacific", "EWH": "AsiaPacific", "EWS": "AsiaPacific",
+    "EWT": "AsiaPacific", "EWY": "AsiaPacific", "FXI": "AsiaPacific",
+    "EWC": "Americas", "EWZ": "Americas", "EWW": "Americas",
+    "EZA": "EMEA",
+}
+
+EXTERNAL_UNIVERSES = {
+    "india_etf": {"assets": INDIA_ETF, "start": "2011-04-01", "label": "India multi-asset ETFs"},
+    "sector": {"assets": US_SECTOR_ETF, "start": "2000-06-20", "label": "US sector ETFs"},
+    "country": {"assets": GLOBAL_COUNTRY_ETF, "start": "2004-10-11", "label": "Global country ETFs"},
+}
+
+ALL_UNIVERSES = {**UNIVERSES, **EXTERNAL_UNIVERSES}

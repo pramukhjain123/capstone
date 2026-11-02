@@ -155,4 +155,42 @@ alternative.
 variables (plus $N$ auxiliary variables for the turnover epigraph) and $N+|\mathcal{G}|$
 linear constraints; with an interior-point solver \citep{diamond2016} it takes a few
 milliseconds for $N\le 50$. A full 20-year monthly backtest of CA-HRP runs in under
-six seconds on a laptop.
+six seconds on a laptop; Section~\ref{sec:extended} reports timings up to $N=400$.
+
+\subsection{Regime-robust projection (CA-HRP-R)}\label{sec:robust}
+The tracking-error metric in \eqref{eq:te} trusts a single covariance estimate. When
+correlations shift, the hedge chosen by the projection can fail. We therefore also study a
+\emph{regime-robust} projection that tracks HRP under the worst of $K$ covariance
+scenarios $\{\Sigma_k\}_{k=1}^K$:
+\begin{equation}\label{eq:robust}
+w^{\mathrm{R}}=\arg\min_{w\in\mathcal{W}(w^-)}\ \max_{k=1,\dots,K}\
+(w-w^{\mathrm{HRP}})^\top\bar\Sigma_k(w-w^{\mathrm{HRP}}),
+\end{equation}
+where every $\bar\Sigma_k$ uses the same scale factor as the baseline estimate, so that
+relative risk levels across regimes are preserved. We consider three scenarios: the
+1-year Ledoit--Wolf estimate, a 3-month (63-day) Ledoit--Wolf estimate capturing the
+current regime, and a ``hedges-fail'' stress covariance
+$D\lvert\rho\rvert D$ in which every correlation is replaced by its absolute value.
+
+\begin{proposition}[Robust projection]\label{prop:robust}
+Problem \eqref{eq:robust} is convex, has a unique solution, and returns $w^{\mathrm{HRP}}$
+whenever it is feasible. Its optimal value $t^\star$ bounds the ex-ante tracking-error
+variance under \emph{every} covariance matrix in the convex hull
+$\operatorname{conv}\{\bar\Sigma_1,\dots,\bar\Sigma_K\}$:
+$(w^{\mathrm{R}}-w^{\mathrm{HRP}})^\top\Sigma(w^{\mathrm{R}}-w^{\mathrm{HRP}})\le t^\star$.
+\end{proposition}
+\begin{proof}
+Each term is a strictly convex quadratic, and the pointwise maximum of strictly convex
+functions is strictly convex; with a non-empty convex feasible set this gives existence
+and uniqueness, and the objective is zero only at $w^{\mathrm{HRP}}$. For
+$\Sigma=\sum_k\lambda_k\bar\Sigma_k$ with $\lambda$ in the simplex and $d=w-w^{\mathrm{HRP}}$,
+$d^\top\Sigma d=\sum_k\lambda_k d^\top\bar\Sigma_k d\le\max_k d^\top\bar\Sigma_k d$, because
+the tracking-error variance is linear in $\Sigma$.
+\end{proof}
+
+Problem \eqref{eq:robust} is a second-order cone program (epigraph form) and solves as fast
+as \eqref{eq:te}. The choice of scenarios was made on the validation period only
+(Appendix~\ref{app:design}): the variant using the 1-year and 3-month regimes was selected.
+The hedges-fail stress scenario was rejected at that stage because it lowered validation
+performance markedly, even though the held-out period later contained exactly such a
+regime (2022). We report the frozen choice regardless.
