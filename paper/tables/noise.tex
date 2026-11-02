@@ -1,0 +1,13 @@
+\begin{table}[!htbp]\centering\small
+\caption{Noise damping. Ratio of the dispersion of bootstrapped portfolios to the dispersion of the bootstrapped HRP targets (1 = noise passed through unchanged, $<$1 = damped, $>$1 = amplified), averaged over 10 dates $\times$ 780 bootstrap pairs, and the worst pair. Measured in the risk metric $\bar\Sigma$; ``share amplified'' is the fraction of pairs that clipping pushes further apart in the Euclidean norm.}\label{tab:noise}
+\setlength{\tabcolsep}{4pt}\begin{tabular}{l rr rr r}\toprule
+ & \multicolumn{2}{c}{CA-HRP projection} & \multicolumn{2}{c}{HRP-Clip} & Share\\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Universe & mean & worst & mean & worst & amplified\\\midrule
+ETFs & 0.48 & 0.99 & 2.08 & 10.49 & 50\%\\
+NIFTY & 0.97 & 1.00 & 0.96 & 1.06 & 3\%\\
+US & 0.97 & 1.00 & 0.95 & 1.17 & 4\%\\
+India ETFs & 0.74 & 1.00 & 0.90 & 1.99 & 43\%\\
+US sectors & 0.85 & 1.00 & 0.84 & 1.75 & 25\%\\
+Countries & 0.82 & 1.00 & 0.83 & 1.63 & 14\%\\
+\bottomrule\end{tabular}\end{table}

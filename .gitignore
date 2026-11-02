@@ -10,3 +10,4 @@ paper/*.toc
 paper/build.log
 results/FINISHED
 results/EXTENDED_DONE*
+results/*_DONE

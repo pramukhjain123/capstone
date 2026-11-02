@@ -335,3 +335,128 @@ if __name__ == "__main__":
     decomposition_table()
     montecarlo_table()
     robust_design_table()
+
+
+# ------------------------------------------------------------------ round 3
+def compliance_table():
+    d = pd.read_csv(TAB / "compliance_cost.csv", index_col=0)
+    lines = [r"\begin{table}[!htbp]\centering\small",
+             r"\caption{Price of compliance for CA-HRP: ex-ante tracking error to HRP (\% p.a.) "
+             r"needed to satisfy the mandate, share of rebalances where compliance is free, share "
+             r"where the turnover cap binds, and the Shapley split of the cost across constraint "
+             r"families.}\label{tab:compliance}",
+             r"\setlength{\tabcolsep}{4pt}\begin{tabular}{l rrrr rrr}\toprule",
+             r" & \multicolumn{2}{c}{TE to HRP} & Free & Turnover & \multicolumn{3}{c}{Shapley share}\\",
+             r"\cmidrule(lr){2-3}\cmidrule(lr){6-8}",
+             r"Universe & mean & max & dates & binds & asset caps & groups & turnover\\\midrule"]
+    for u, lab in ALL6.items():
+        r = d.loc[u]
+        lines.append(f"{lab} & {pct(r.te_mean)} & {pct(r.te_max)} & {pct(r.zero_cost, 0)}\\% & "
+                     f"{pct(r.turnover_binding, 0)}\\% & {pct(r['asset caps'], 0)}\\% & "
+                     f"{pct(r['group limits'], 0)}\\% & {pct(r['turnover'], 0)}\\%\\\\")
+    lines += [r"\bottomrule\end{tabular}\end{table}"]
+    (OUT / "compliance.tex").write_text("\n".join(lines))
+
+
+def noise_table():
+    d = pd.read_csv(TAB / "noise_damping.csv", index_col=0)
+    lines = [r"\begin{table}[!htbp]\centering\small",
+             r"\caption{Noise damping. Ratio of the dispersion of bootstrapped portfolios to the "
+             r"dispersion of the bootstrapped HRP targets (1 = noise passed through unchanged, "
+             r"$<$1 = damped, $>$1 = amplified), averaged over 10 dates $\times$ 780 bootstrap pairs, "
+             r"and the worst pair. Measured in the risk metric $\bar\Sigma$; ``share amplified'' is the "
+             r"fraction of pairs that clipping pushes further apart in the Euclidean norm.}\label{tab:noise}",
+             r"\setlength{\tabcolsep}{4pt}\begin{tabular}{l rr rr r}\toprule",
+             r" & \multicolumn{2}{c}{CA-HRP projection} & \multicolumn{2}{c}{HRP-Clip} & Share\\",
+             r"\cmidrule(lr){2-3}\cmidrule(lr){4-5}",
+             r"Universe & mean & worst & mean & worst & amplified\\\midrule"]
+    for u, lab in ALL6.items():
+        r = d.loc[u]
+        lines.append(f"{lab} & {r.proj_mean:.2f} & {r.proj_max:.2f} & {r.clip_mean_S:.2f} & "
+                     f"{r.clip_max_S:.2f} & {pct(r.clip_frac_expand, 0)}\\%\\\\")
+    lines += [r"\bottomrule\end{tabular}\end{table}"]
+    (OUT / "noise.tex").write_text("\n".join(lines))
+
+
+def stats_table():
+    m = pd.read_csv(TAB / "mcs.csv")
+    dsr = pd.read_csv(TAB / "dsr.csv").set_index("universe")
+    cal = pd.read_csv(TAB / "risk_calibration.csv")
+    meths = ["MinVar-C", "MVO-C", "HRP-Proj", "CA-HRP-B", "CA-HRP", "CA-HRP-R"]
+    lines = [r"\begin{table*}[!htbp]\centering\small",
+             r"\caption{Statistical checks. Left: membership of the 90\% Model Confidence Set "
+             r"(\checkmark) for return (negative return loss) and risk (squared return loss) among the "
+             r"mandate-compliant methods. Middle: CA-HRP's probabilistic Sharpe ratio against zero and "
+             r"its deflated Sharpe ratio after charging for 22 configurations tried. Right: risk "
+             r"calibration bias statistic (standard deviation of monthly returns standardised by "
+             r"predicted risk; 1 = calibrated, $>$1 = risk under-predicted).}\label{tab:stats}",
+             r"\resizebox{\linewidth}{!}{\begin{tabular}{l cccccc cccccc rr rrr}\toprule",
+             r" & \multicolumn{6}{c}{MCS (return)} & \multicolumn{6}{c}{MCS (risk)} & "
+             r"\multicolumn{2}{c}{CA-HRP} & \multicolumn{3}{c}{Bias statistic}\\",
+             r"\cmidrule(lr){2-7}\cmidrule(lr){8-13}\cmidrule(lr){14-15}\cmidrule(lr){16-18}",
+             r"Universe & " + " & ".join([r"\rotatebox{90}{" + x + "}" for x in meths] * 2)
+             + r" & PSR & DSR & MinVar-C & HRP-Proj & CA-HRP\\\midrule"]
+    for u, lab in ALL6.items():
+        cells = []
+        for loss in ["return (-r)", "risk (r^2)"]:
+            for me in meths:
+                v = m[(m.universe == u) & (m.loss == loss) & (m.method == me)].in_MCS_90.iloc[0]
+                cells.append(r"\checkmark" if v else "")
+        b = cal[cal.universe == u].set_index("method").bias_stat
+        lines.append(f"{lab} & " + " & ".join(cells) + f" & {dsr.loc[u, 'PSR_0']:.3f} & {dsr.loc[u, 'DSR']:.3f}"
+                     f" & {b['MinVar-C']:.2f} & {b['HRP-Proj']:.2f} & {b['CA-HRP']:.2f}\\\\")
+    lines += [r"\bottomrule\end{tabular}}\end{table*}"]
+    (OUT / "stats.tex").write_text("\n".join(lines))
+
+
+def verification_table():
+    v = pd.read_csv(TAB / "verification.csv")
+    lines = [r"\begin{table*}[!htbp]\centering\small",
+             r"\caption{Verification suite (\texttt{scripts/verify.py}). Every check is run on the "
+             r"stored results; the one strict failure is reported together with its economic "
+             r"impact.}\label{tab:verify}",
+             r"\footnotesize\begin{tabular}{p{3.4cm}p{7.4cm}rrc}\toprule",
+             r"Check & What is measured & Value & Threshold & Result\\\midrule"]
+    for _, r in v.iterrows():
+        val = "0" if r.value == 0 else f"{r.value:.1e}"
+        thr = "0" if r.threshold == 0 else f"{r.threshold:.0e}"
+        res = "pass" if r.passed else r"\textbf{fail}"
+        det = r.detail.replace("|", r"$|$").replace("_", r"\_").replace(" x ", r" $\times$ ")
+        lines.append(f"{r.check} & {det} & {val} & {thr} & {res}\\\\")
+    lines += [r"\bottomrule\end{tabular}\end{table*}"]
+    (OUT / "verify.tex").write_text("\n".join(lines))
+
+
+def random_table():
+    r = pd.read_csv(TAB / "random_mandates.csv")
+    b = pd.read_csv(TAB / "random_mandates_by_binding.csv")
+    labs = {"etf": "ETFs", "nifty": "NIFTY", "us": "US", "country": "Countries", "all": "All"}
+    lines = [r"\begin{table}[!htbp]\centering\small",
+             r"\caption{Random mandates (40 per universe, half with scrambled group labels). Share of "
+             r"mandates in which CA-HRP has a higher Sharpe ratio than each competitor, mean Sharpe "
+             r"difference with HRP-Proj, and share in which CA-HRP's volatility is not higher than "
+             r"HRP-Proj's.}\label{tab:random}",
+             r"\setlength{\tabcolsep}{3.5pt}\begin{tabular}{ll r rrr r r}\toprule",
+             r"Universe & Groups & $n$ & \multicolumn{3}{c}{CA-HRP wins vs} & $\Delta$SR & Vol $\le$\\",
+             r"\cmidrule(lr){4-6}",
+             r" & & & Proj & Clip & MinVar-C & vs Proj & Proj\\\midrule"]
+    for _, x in r.iterrows():
+        grp = "all" if x.placebo == "all" else ("scrambled" if str(x.placebo) == "True" else "true")
+        lines.append(f"{labs[x.universe]} & {grp} & {int(x.draws)} & {pct(x.win_vs_proj, 0)}\\% & "
+                     f"{pct(x.win_vs_clip, 0)}\\% & {pct(x.win_vs_minvar, 0)}\\% & "
+                     f"{x.dSR_proj_mean:+.3f} & {pct(x.lower_vol_than_proj, 0)}\\%\\\\")
+    lines += [r"\midrule", r"\multicolumn{8}{l}{\emph{By how often HRP breaches the mandate:}}\\"]
+    for _, x in b.iterrows():
+        lines.append(f"\\multicolumn{{2}}{{l}}{{HRP breach share {x.bin}}} & {int(x.draws)} & "
+                     f"{pct(x.win_rate, 0)}\\% & & & {x.mean_gain:+.3f} & \\\\")
+    lines += [r"\bottomrule\end{tabular}\end{table}"]
+    (OUT / "random.tex").write_text("\n".join(lines))
+
+
+if __name__ == "__main__":
+    compliance_table()
+    noise_table()
+    stats_table()
+    verification_table()
+    if (TAB / "random_mandates.csv").exists():
+        random_table()

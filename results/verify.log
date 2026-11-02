@@ -1,0 +1,12 @@
+[PASS] Data manifest written | SHA-256 of every raw data file | 0 (<= 0.0)
+[PASS] No look-ahead | weights up to a date unchanged when all later returns are replaced by noise | 0 (<= 0.0)
+[PASS] Deterministic re-run | max diff vs stored results (2 universes x 3 methods) | 0 (<= 1e-09)
+[PASS] Cost accounting | |(gross - net) - turnover x cost| summed per backtest, max | 5.55e-16 (<= 1e-10)
+[PASS] Independent metric recomputation | max gap in Sharpe / CAGR / MaxDD, all backtests | 4.44e-16 (<= 1e-09)
+[PASS] Paper tables match raw results | max gap Sharpe/Vol between table CSV and recomputation | 2.22e-16 (<= 1e-12)
+[PASS] Raw constraint audit | largest breach of any constraint, 6 compliant methods x 6 universes, no tolerance | 2.18e-08 (<= 1e-06)
+[PASS] Three solvers agree | max weight gap CLARABEL vs OSQP/SCS, 30 projections | 5.75e-05 (<= 0.0001)
+[PASS] HRP matches PyPortfolioOpt | max |w_ours - w_ref| over 36 windows, 6 universes | 1.11e-16 (<= 1e-08)
+[FAIL] Min-variance matches PyPortfolioOpt | max relative excess variance of our solution over the reference, 36 windows | 0.00018 (<= 0.0001)
+[PASS] Min-variance precision: economic impact | max change in MinVar-C Sharpe when re-solved with a rescaled objective, 6 universes | 0.000272 (<= 0.001)
+10/11 checks passed

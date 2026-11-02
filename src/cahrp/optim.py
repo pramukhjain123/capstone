@@ -148,6 +148,59 @@ def _solve_extra(objective, w, c, w_prev, extra, fallback):
     return fallback
 
 
+def projection_attribution(target: np.ndarray, cov: np.ndarray, c: Constraints,
+                           w_prev: Optional[np.ndarray] = None, ridge: float = 1e-4):
+    """Solve the tracking-error projection and decompose its optimal value by constraint.
+
+    For f(w) = d'Sd with d = w - t, KKT stationarity gives 2Sd = -(sum_k lambda_k a_k + nu 1)
+    for linear constraints a_k'w <= b_k, hence the exact identity
+        f* = d'Sd = 1/2 * sum_k lambda_k (a_k't - b_k)          (budget term vanishes)
+    i.e. the cost of compliance splits additively over constraints, each term being the
+    shadow price times the amount by which the HRP target violates that constraint.
+    The l1 turnover constraint is non-linear; its contribution is the remainder f* - sum.
+
+    Returns dict with weights, f*, per-family terms and annualised ex-ante TE.
+    """
+    n = len(target)
+    S = 0.5 * (cov + cov.T)
+    S = S / np.trace(S) * n + ridge * np.eye(n)
+    w = cp.Variable(n)
+    d = w - target
+    labels, G = c.group_matrix()
+    cap_rows = [k for k, lab in enumerate(labels) if lab in c.group_max]
+    flo_rows = [k for k, lab in enumerate(labels) if lab in c.group_min]
+    cons = {"budget": cp.sum(w) == 1, "long-only": w >= c.lower, "asset caps": w <= c.upper}
+    if cap_rows:
+        cmax = np.array([c.group_max[labels[k]] for k in cap_rows])
+        cons["group caps"] = G[cap_rows] @ w <= cmax
+    if flo_rows:
+        cmin = np.array([c.group_min[labels[k]] for k in flo_rows])
+        cons["group floors"] = G[flo_rows] @ w >= cmin
+    use_to = c.turnover_max is not None and w_prev is not None
+    if use_to:
+        cons["turnover"] = cp.norm1(w - w_prev) <= c.turnover_max
+    prob = cp.Problem(cp.Minimize(cp.quad_form(d, cp.psd_wrap(S))), list(cons.values()))
+    prob.solve(solver="CLARABEL")
+    if prob.status not in ("optimal", "optimal_inaccurate"):
+        return None
+    lam = {k: np.atleast_1d(np.asarray(v.dual_value, dtype=float)) for k, v in cons.items()}
+    terms = {
+        "long-only": 0.5 * float(lam["long-only"] @ (c.lower - target)),
+        "asset caps": 0.5 * float(lam["asset caps"] @ (target - c.upper)),
+    }
+    if cap_rows:
+        terms["group caps"] = 0.5 * float(lam["group caps"] @ (G[cap_rows] @ target - cmax))
+    if flo_rows:
+        terms["group floors"] = 0.5 * float(lam["group floors"] @ (cmin - G[flo_rows] @ target))
+    fstar = float(prob.value)
+    terms["turnover"] = fstar - sum(terms.values())
+    x = np.asarray(w.value).ravel()
+    dd = x - target
+    return {"w": x, "fstar": fstar, "terms": terms,
+            "te_ann": float(np.sqrt(max(dd @ cov @ dd, 0) * 252)),
+            "turnover_dual": float(lam["turnover"][0]) if use_to else 0.0}
+
+
 def euclidean_projection(target: np.ndarray, c: Constraints,
                          w_prev: Optional[np.ndarray] = None) -> np.ndarray:
     w = cp.Variable(len(target))

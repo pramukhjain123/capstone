@@ -46,7 +46,15 @@ of the HRP fixes in all six universes and the highest true Sharpe ratio of all m
 simulation. It does not, however, beat constrained minimum variance on realised returns, and
 the regime-robust variant did not help in the 2022 stock--bond correlation shift. Most gains
 come from group constraints, and the risk-aware projection metric, not the estimator or
-clustering rule, drives them.
+clustering rule, drives them. We further prove that the projection never amplifies estimation
+noise, whereas clipping amplified it up to tenfold in our data, and we give an exact,
+shadow-price decomposition of the ``price of compliance'' that identifies group limits as
+responsible for 67--82\% of it wherever it is material. In 160 random mandates, including a
+scrambled-group placebo, CA-HRP stayed compliant everywhere and had lower or equal volatility
+than Euclidean projection in 85\% of cases, but its return advantage was confined to
+correlation-aligned group constraints. An eleven-check verification suite, including an
+exact match with an independent HRP implementation and a look-ahead test, accompanies the
+code.
 
 \medskip\noindent\textbf{Keywords:} hierarchical risk parity, portfolio optimisation,
 constrained allocation, tracking error, robust estimation, convex optimisation.
@@ -73,7 +81,12 @@ hard the constraints bind. We also report two negative results that we believe a
 for the literature on hierarchical allocation: embedding constraints directly in the
 recursive bisection, although provably feasible, performs worse than projecting afterwards;
 and robustness to correlation regimes the estimation window has never seen cannot be
-obtained simply by adding covariance scenarios.
+obtained simply by adding covariance scenarios. Two further results explain the method's behaviour: the
+projection provably damps estimation noise while the common clipping fix can amplify it many
+times over, and the cost of compliance can be split exactly across the rules of a mandate,
+which tells a manager which rule is costing the most. A random-mandate study and a placebo
+test showed that the return advantage is specific to strongly binding, correlation-aligned
+group constraints, while the compliance and risk advantages hold broadly.
 
 Future work includes projection metrics that learn regime changes in correlations, the use
 of CA-HRP with factor-model covariance estimates for universes of thousands of assets, and

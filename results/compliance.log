@@ -1,0 +1,12 @@
+[attribution] etf: 214 dates
+[attribution] nifty: 178 dates
+[attribution] us: 238 dates
+[attribution] india_etf: 175 dates
+[attribution] sector: 305 dates
+[attribution] country: 253 dates
+[noise] etf
+[noise] nifty
+[noise] us
+[noise] india_etf
+[noise] sector
+[noise] country

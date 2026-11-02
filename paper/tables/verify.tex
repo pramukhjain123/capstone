@@ -1,0 +1,16 @@
+\begin{table*}[!htbp]\centering\small
+\caption{Verification suite (\texttt{scripts/verify.py}). Every check is run on the stored results; the one strict failure is reported together with its economic impact.}\label{tab:verify}
+\footnotesize\begin{tabular}{p{3.4cm}p{7.4cm}rrc}\toprule
+Check & What is measured & Value & Threshold & Result\\\midrule
+Data manifest written & SHA-256 of every raw data file & 0 & 0 & pass\\
+No look-ahead & weights up to a date unchanged when all later returns are replaced by noise & 0 & 0 & pass\\
+Deterministic re-run & max diff vs stored results (2 universes $\times$ 3 methods) & 0 & 1e-09 & pass\\
+Cost accounting & $|$(gross - net) - turnover $\times$ cost$|$ summed per backtest, max & 5.6e-16 & 1e-10 & pass\\
+Independent metric recomputation & max gap in Sharpe / CAGR / MaxDD, all backtests & 4.4e-16 & 1e-09 & pass\\
+Paper tables match raw results & max gap Sharpe/Vol between table CSV and recomputation & 2.2e-16 & 1e-12 & pass\\
+Raw constraint audit & largest breach of any constraint, 6 compliant methods $\times$ 6 universes, no tolerance & 2.2e-08 & 1e-06 & pass\\
+Three solvers agree & max weight gap CLARABEL vs OSQP/SCS, 30 projections & 5.7e-05 & 1e-04 & pass\\
+HRP matches PyPortfolioOpt & max $|$w\_ours - w\_ref$|$ over 36 windows, 6 universes & 1.1e-16 & 1e-08 & pass\\
+Min-variance matches PyPortfolioOpt & max relative excess variance of our solution over the reference, 36 windows & 1.8e-04 & 1e-04 & \textbf{fail}\\
+Min-variance precision: economic impact & max change in MinVar-C Sharpe when re-solved with a rescaled objective, 6 universes & 2.7e-04 & 1e-03 & pass\\
+\bottomrule\end{tabular}\end{table*}

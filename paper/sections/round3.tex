@@ -1,0 +1,144 @@
+\section{Explaining, Stress-Testing and Verifying the Method}\label{sec:round3}
+
+This section adds a third round of analysis: tools that explain \emph{what} compliance costs
+and \emph{why} CA-HRP is stable, a stress test of the evidence against the objection that the
+constraint sets were hand-picked, stricter statistics, and an independent verification of the
+implementation.
+
+\subsection{What does compliance cost, and which rule is responsible?}
+Using Proposition~\ref{prop:kkt} and the Shapley split we decompose, on every one of the
+1{,}363 CA-HRP rebalances, the tracking error that compliance forces away from HRP
+(Table~\ref{tab:compliance}, Figure~\ref{fig:compliance}). Two checks hold on every date:
+re-solving the attribution problem from scratch reproduces the stored backtest weights to
+within $2.4\times10^{-10}$, and the turnover remainder in \eqref{eq:kkt} is below
+$10^{-8}$ whenever the turnover cap is slack, as the identity requires.
+
+The price of compliance differs sharply across mandates. In the multi-asset universe CA-HRP
+must sit 5.0\% (ex-ante tracking error, p.a.) away from HRP on average, and 14.6\% at the peak
+in 2009, when HRP wanted almost the entire portfolio in short-term Treasuries. In the stock
+universes compliance is nearly free (0.1\% on average) and costs nothing at all on 59\%
+(NIFTY) and 41\% (US) of rebalance dates. Wherever compliance is expensive, \emph{group}
+limits are responsible for most of it: 67\% of the cost for multi-asset ETFs, 73\% for US
+sectors, 77\% for countries and 82\% for Indian ETFs. Only in the NIFTY universe, where sector
+caps are loose relative to the index, do single-stock caps dominate (97\%). The turnover cap
+binds on at most 12\% of dates; its 20\% Shapley share in the multi-asset universe reflects
+that, on its own, a turnover budget would also stop the portfolio from moving towards a target
+that the other limits have already pushed far away, which the Shapley value credits to it.
+This attribution is, to our knowledge, new for hierarchical allocation and gives a portfolio
+manager a direct answer to ``which rule of my mandate is costing me the most HRP-ness?''.
+
+\input{tables/compliance}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{../results/figures/compliance_cost.pdf}
+\caption{Top: price of compliance (ex-ante tracking error of CA-HRP to HRP). Bottom: Shapley
+share of each constraint family (6-month moving average).}
+\label{fig:compliance}
+\end{figure}
+
+\subsection{Noise damping: CA-HRP shrinks estimation noise, clipping amplifies it}
+To test Proposition~\ref{prop:nonexp} empirically we bootstrap the estimation window 40 times
+at 10 dates per universe, compute HRP on each resample, and push each target through the
+CA-HRP projection and through HRP-Clip. For all $6\times10\times780$ pairs of resamples we
+compare the distance between the two portfolios with the distance between the two targets
+(Table~\ref{tab:noise}). The CA-HRP projection never increased the distance beyond solver
+tolerance (largest ratio $1+10^{-6}$), as the proposition guarantees, and on average it
+shrank it, to 0.48 of its original size for multi-asset ETFs and to 0.74--0.97 elsewhere.
+Clipping behaves very differently. In the multi-asset universe it amplified noise on average
+(ratio 2.08) and by a factor of 10.5 for the worst pair, and it pushed half of all pairs
+further apart; in the Indian ETF and sector universes it amplified 43\% and 25\% of pairs.
+This is the mechanism behind HRP-Clip's high turnover in Table~\ref{tab:main}: small changes
+in the estimate produce large changes in the clipped portfolio.
+
+\input{tables/noise}
+
+\subsection{Random mandates and a placebo test}
+The constraint sets in Sections~\ref{sec:results}--\ref{sec:extended} were fixed in advance,
+but they are still only nine mandates. To remove any suspicion that they favour CA-HRP, we
+drew 160 random mandates, 40 in each of four universes (multi-asset ETFs, NIFTY, US large
+caps and countries). Each draw picks a random subset of between half and all of the assets, a
+random start date in the first third of the sample, a per-asset cap between $1.5/n$ and $4/n$,
+a group cap between $1.2/G$ and $2.5/G$, and a 30\% turnover budget; infeasible draws are
+rejected by a linear feasibility check. As a placebo, every second draw replaces the true
+sector, asset-class or region labels by random labels into three to six groups, which breaks
+the link between groups and correlation structure. The design and random seeds were fixed
+before the study was run.
+
+Table~\ref{tab:random} and Figure~\ref{fig:random} summarise the results. CA-HRP and the
+other optimisation-based methods satisfied every constraint in every mandate, while HRP-Clip
+breached them at 4\% of rebalances. CA-HRP had volatility no higher than HRP-Proj in 85\% of
+the mandates. On Sharpe ratio, however, the picture is balanced: CA-HRP beat HRP-Proj in
+55\% of mandates (mean difference $+0.014$, median $+0.002$), HRP-Clip in 56\% and
+constrained minimum variance in 46\%. The advantage is concentrated in the multi-asset
+universe, where CA-HRP beat HRP-Proj in 90\% of mandates with true groups, and it reverses
+for country funds, where it won only 25--30\% of the time. Scrambling the group labels halves
+the multi-asset advantage ($+0.076$ to $+0.035$), consistent with the mechanism of
+Proposition~\ref{prop:te}(d): when groups follow the correlation structure, choosing
+replacement assets by covariance matters more. In the US universe the placebo did not weaken
+the effect, so this evidence is suggestive rather than conclusive. The gain is largest when HRP
+breaches the mandate at more than 75\% of rebalances ($+0.021$, 60\% win rate), but it is not
+monotone in how often the mandate binds. Overall the random mandates support the paper's
+central, narrower claim: CA-HRP is a reliable and lower-risk way to make HRP compliant, with
+a return advantage that is specific to strongly binding, correlation-aligned group
+constraints.
+
+\input{tables/random}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{../results/figures/random_mandates.pdf}
+\caption{Random mandates. Left: Sharpe-ratio gain of CA-HRP over HRP-Proj against how often
+HRP breaches the mandate (circles: true groups; crosses: scrambled-group placebo). Right:
+CA-HRP against constrained minimum variance (colour: HRP breach share).}
+\label{fig:random}
+\end{figure}
+
+
+\subsection{Stricter statistics}
+\paragraph{Model Confidence Set.} Table~\ref{tab:stats} applies the Model Confidence Set of
+\citet{hansen2011} (T$_{\max}$ statistic, 21-day block bootstrap, 1{,}000 draws, 90\%
+level) to the six mandate-compliant methods. With negative returns as the loss, no method can
+be eliminated in any universe: realised returns cannot distinguish these methods over 15--25
+years. With squared returns as the loss, constrained minimum variance is in the set in every
+universe, as it should be since it minimises variance by design; CA-HRP and CA-HRP-R are the
+only other methods that survive, and only in the multi-asset universe.
+
+\paragraph{Deflated Sharpe ratio.} During the project we evaluated 22 configurations of
+CA-HRP (design study, robust design study and ablations). Charging for all of them with the
+deflated Sharpe ratio of \citet{bailey2014} (using the cross-method variance of
+Sharpe ratios, which is conservative), CA-HRP's Sharpe ratio remains significantly positive
+in every universe (DSR between 0.963 for countries and 1.000), despite strongly fat-tailed
+returns (daily kurtosis 9--20). Its positive risk-adjusted return is therefore not an
+artefact of trying many variants, although, as above, this is not evidence of superiority over
+the other compliant methods.
+
+\paragraph{Risk calibration.} Optimised portfolios tend to under-predict their own risk. We
+compare each method's predicted volatility at each rebalance with the realised volatility of
+the following month. Constrained minimum variance is the most optimistic in the stock
+universes (bias statistic 1.29 for NIFTY and 1.12 for US, against 1.21 and 1.05 for CA-HRP),
+consistent with the optimiser's curse; in the ETF universes the methods are similar
+(1.03--1.15). CA-HRP's risk forecasts are therefore at least as reliable as those of the
+optimisers it is compared with, which matters to a risk manager even when realised returns
+are indistinguishable.
+
+\input{tables/stats}
+
+\subsection{Verification}
+Table~\ref{tab:verify} lists eleven automated checks run against the stored results. Our HRP
+implementation reproduces the independent PyPortfolioOpt implementation \citep{martin2021} to $10^{-16}$ on
+36 windows. No look-ahead: replacing every return after a given date by random noise leaves
+all earlier weights and returns bit-for-bit unchanged. Re-running backtests reproduces the
+stored results exactly; transaction costs, Sharpe ratios, growth rates and drawdowns
+recomputed by independent code agree to $10^{-15}$; the tables in the paper equal a fresh
+recomputation; three different solvers agree on the projection to $6\times10^{-5}$; and an
+audit of every stored portfolio of every compliant method finds no constraint breached by
+more than $2\times10^{-8}$. One check failed its strict threshold: our constrained
+minimum-variance solutions have up to $1.8\times10^{-4}$ relative excess variance over
+PyPortfolioOpt's, because daily variances are tiny relative to default solver tolerances.
+Re-solving with a rescaled objective changes that competitor's Sharpe ratio by at most
+$3\times10^{-4}$, so no conclusion depends on it; we keep the original numbers so that the
+repository reproduces every table exactly. A SHA-256 manifest of all data files is included
+in the repository.
+
+\input{tables/verify}

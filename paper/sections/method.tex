@@ -157,6 +157,58 @@ linear constraints; with an interior-point solver \citep{diamond2016} it takes a
 milliseconds for $N\le 50$. A full 20-year monthly backtest of CA-HRP runs in under
 six seconds on a laptop; Section~\ref{sec:extended} reports timings up to $N=400$.
 
+\subsection{Two further properties: noise damping and the price of compliance}
+\label{sec:props}
+
+\begin{proposition}[Noise damping]\label{prop:nonexp}
+Fix the metric $\bar\Sigma\succ0$ and the feasible set $\mathcal{W}$, and let
+$P(t)=\arg\min_{w\in\mathcal{W}}\lVert w-t\rVert_{\bar\Sigma}$ with
+$\lVert x\rVert_{\bar\Sigma}^2=x^\top\bar\Sigma x$. Then for any two targets $t_1,t_2$,
+$\lVert P(t_1)-P(t_2)\rVert_{\bar\Sigma}\le\lVert t_1-t_2\rVert_{\bar\Sigma}$.
+\end{proposition}
+\begin{proof}
+$\langle x,y\rangle_{\bar\Sigma}=x^\top\bar\Sigma y$ is an inner product, so $P$ is the
+metric projection onto a closed convex set in a Hilbert space, which is firmly
+non-expansive \citep{bauschke2017}: $\lVert P t_1-Pt_2\rVert^2\le\langle Pt_1-Pt_2,\,t_1-t_2\rangle\le
+\lVert Pt_1-Pt_2\rVert\,\lVert t_1-t_2\rVert$ by the variational inequality characterising
+projections and the Cauchy--Schwarz inequality.
+\end{proof}
+
+Proposition~\ref{prop:nonexp} means that whatever estimation noise the HRP target carries,
+the projection can only shrink it, measured in the same risk metric. The clip-and-renormalise
+heuristic has no such property; Section~\ref{sec:round3} shows that in practice it often
+\emph{amplifies} noise.
+
+\begin{proposition}[Exact price-of-compliance identity]\label{prop:kkt}
+Let $f^\star=(w^{\mathrm{CA}}-t)^\top\bar\Sigma(w^{\mathrm{CA}}-t)$ be the optimal value of
+\eqref{eq:te} with linear constraints $a_k^\top w\le b_k$ and multipliers
+$\lambda_k\ge0$. Then
+\begin{equation}\label{eq:kkt}
+f^\star=\tfrac12\sum_k\lambda_k\,(a_k^\top t-b_k),
+\end{equation}
+so the cost of compliance splits exactly over constraints, each term being the shadow price
+of a constraint times the amount by which the HRP target $t$ violates it.
+\end{proposition}
+\begin{proof}
+Stationarity gives $2\bar\Sigma d=-(\sum_k\lambda_k a_k+\nu\mathbf1)$ with $d=w^{\mathrm{CA}}-t$.
+Multiply by $d^\top/2$: $f^\star=-\tfrac12\sum_k\lambda_k a_k^\top d$, because
+$\mathbf1^\top d=0$. Complementary slackness gives
+\[
+\lambda_k a_k^\top w^{\mathrm{CA}}=\lambda_k b_k,\qquad\text{hence}\qquad
+-\lambda_k a_k^\top d=\lambda_k(a_k^\top t-b_k).
+\]
+\end{proof}
+
+Individual terms of \eqref{eq:kkt} can be negative: a cap that the target already satisfies
+but that binds at the optimum contributes negatively. To report the cost by \emph{family} of
+constraints (asset caps; group caps and floors; turnover) we therefore use the Shapley value \citep{shapley1953}
+of the cooperative game $v(S)=f^\star_S$, the optimal value when only the families in $S$
+are imposed. It is order-independent and adds up exactly to $f^\star$, and it costs $2^3=8$
+small solves per date. The $\ell_1$ turnover cap is not linear in $w$, but in its standard
+linear epigraph form the identity still holds; we compute the turnover term as
+$f^\star$ minus the linear terms and use \eqref{eq:kkt} as an exactness check on every date
+(the remainder must vanish whenever the turnover cap is slack).
+
 \subsection{Regime-robust projection (CA-HRP-R)}\label{sec:robust}
 The tracking-error metric in \eqref{eq:te} trusts a single covariance estimate. When
 correlations shift, the hedge chosen by the projection can fail. We therefore also study a

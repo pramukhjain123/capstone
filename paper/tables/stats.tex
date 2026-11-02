@@ -1,0 +1,13 @@
+\begin{table*}[!htbp]\centering\small
+\caption{Statistical checks. Left: membership of the 90\% Model Confidence Set (\checkmark) for return (negative return loss) and risk (squared return loss) among the mandate-compliant methods. Middle: CA-HRP's probabilistic Sharpe ratio against zero and its deflated Sharpe ratio after charging for 22 configurations tried. Right: risk calibration bias statistic (standard deviation of monthly returns standardised by predicted risk; 1 = calibrated, $>$1 = risk under-predicted).}\label{tab:stats}
+\resizebox{\linewidth}{!}{\begin{tabular}{l cccccc cccccc rr rrr}\toprule
+ & \multicolumn{6}{c}{MCS (return)} & \multicolumn{6}{c}{MCS (risk)} & \multicolumn{2}{c}{CA-HRP} & \multicolumn{3}{c}{Bias statistic}\\
+\cmidrule(lr){2-7}\cmidrule(lr){8-13}\cmidrule(lr){14-15}\cmidrule(lr){16-18}
+Universe & \rotatebox{90}{MinVar-C} & \rotatebox{90}{MVO-C} & \rotatebox{90}{HRP-Proj} & \rotatebox{90}{CA-HRP-B} & \rotatebox{90}{CA-HRP} & \rotatebox{90}{CA-HRP-R} & \rotatebox{90}{MinVar-C} & \rotatebox{90}{MVO-C} & \rotatebox{90}{HRP-Proj} & \rotatebox{90}{CA-HRP-B} & \rotatebox{90}{CA-HRP} & \rotatebox{90}{CA-HRP-R} & PSR & DSR & MinVar-C & HRP-Proj & CA-HRP\\\midrule
+ETFs & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark &  &  &  & \checkmark & \checkmark & 1.000 & 0.999 & 1.08 & 1.05 & 1.08\\
+NIFTY & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark &  &  &  &  &  & 1.000 & 1.000 & 1.29 & 1.21 & 1.20\\
+US & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark &  &  &  &  &  & 1.000 & 1.000 & 1.12 & 1.05 & 1.05\\
+India ETFs & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark &  &  &  &  &  & 1.000 & 1.000 & 1.13 & 1.14 & 1.13\\
+US sectors & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark &  &  &  &  &  & 0.999 & 0.998 & 1.00 & 0.97 & 0.98\\
+Countries & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark &  &  &  &  &  & 0.975 & 0.963 & 1.02 & 0.99 & 1.00\\
+\bottomrule\end{tabular}}\end{table*}

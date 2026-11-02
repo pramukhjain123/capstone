@@ -50,6 +50,14 @@ funds and global country funds), CA-HRP satisfies every constraint at every reba
 every rebalancing frequency. Where constraints bind, it is the strongest member of the HRP
 family; where they rarely bind, it matches HRP. In a Monte Carlo study with a known
 covariance it has the highest true Sharpe ratio of all methods.
+\item \textbf{Explaining the method.} We prove that the projection is non-expansive, so it
+can never amplify estimation noise (Proposition~\ref{prop:nonexp}), and show empirically that
+clipping does amplify it. We derive an exact identity that splits the cost of compliance over
+constraints through their shadow prices (Proposition~\ref{prop:kkt}) and use Shapley values
+to attribute it to the rules of a mandate.
+\item \textbf{Stress tests and verification.} We test 160 random mandates with a
+scrambled-group placebo, apply the Model Confidence Set and the deflated Sharpe ratio, check
+risk-forecast calibration, and publish an eleven-check verification suite.
 \item \textbf{A regime-robust variant and two negative results.} We propose a worst-case
 tracking-error projection over covariance scenarios with a guarantee over their convex hull
 (Proposition~\ref{prop:robust}), and report honestly that it does not improve on CA-HRP,
@@ -61,7 +69,8 @@ The rest of the paper is organised as follows. Section~\ref{sec:related} reviews
 work, Section~\ref{sec:setting} states the problem, Section~\ref{sec:method} presents the
 method and its properties, Section~\ref{sec:design} describes the data and experimental
 protocol, Section~\ref{sec:results} reports the main results, Section~\ref{sec:extended}
-the extended evaluation, and Section~\ref{sec:conclusion} concludes.
+the extended evaluation, Section~\ref{sec:round3} explanation, stress tests and
+verification, and Section~\ref{sec:conclusion} concludes.
 
 \section{Related Work}\label{sec:related}
 

@@ -54,6 +54,22 @@ where the constraints rarely bind, CA-HRP matches HRP and is the top method for 
 - Bootstrap confidence intervals, rebalancing frequency, constraint decomposition and
   runtime scaling up to 400 assets are all in the paper.
 
+**Round 3: explanation, stress tests, verification:**
+- **Noise damping (proved + measured):** the CA-HRP projection can never amplify estimation
+  noise; in the multi-asset universe it shrinks it to 0.48× on average, while the common clip
+  fix amplifies it 2.1× on average and up to 10.5×.
+- **Price of compliance:** an exact shadow-price identity plus a Shapley split tells you which
+  rule of a mandate costs the most. Group limits cause 67–82% of the cost wherever it is
+  material.
+- **160 random mandates + placebo:** always compliant, volatility ≤ Euclidean fix in 85% of
+  cases; the return edge is specific to strongly binding, correlation-aligned group limits.
+- **Statistics:** Model Confidence Set (no compliant method separable on returns), deflated
+  Sharpe ratio after 22 trials (still significant), risk-forecast calibration.
+- **Verification suite** (`scripts/verify.py`): HRP equals PyPortfolioOpt to 1e-16, no
+  look-ahead, deterministic re-runs, independent metric recomputation, three-solver agreement,
+  raw constraint audit; 10/11 strict checks pass and the one failure (min-variance solver
+  precision) is shown to have negligible impact. Data SHA-256 in `data/MANIFEST.csv`.
+
 ## Repository layout
 
 | Path | Contents |
@@ -67,6 +83,11 @@ where the constraints rarely bind, CA-HRP matches HRP and is the top method for 
 | `scripts/design_study_robust.py` | Chooses the CA-HRP-R scenario set on the validation period |
 | `scripts/run_extended.py` | Phase 2: six universes, rebalancing frequency, constraint decomposition, Monte Carlo, runtime |
 | `scripts/summarise_extended.py` | Phase-2 tables and figures |
+| `scripts/compliance_cost.py` | Price-of-compliance attribution and noise-damping experiments |
+| `scripts/random_mandates.py` | 160 random mandates with scrambled-group placebo |
+| `scripts/stats_checks.py` | Model Confidence Set, deflated Sharpe, risk calibration |
+| `scripts/verify.py` | Verification suite and data manifest |
+| `scripts/summarise_round3.py` | Round-3 tables and figures |
 | `scripts/make_tables.py` | Writes every LaTeX table in the paper directly from the result CSVs |
 | `results/tables/`, `results/figures/` | Outputs used in the paper |
 | `paper/` | LaTeX source and compiled PDF of the research paper |
@@ -83,6 +104,11 @@ python scripts/summarise.py
 python scripts/design_study_robust.py
 python scripts/run_extended.py all       # ~40 min
 python scripts/summarise_extended.py
+python scripts/compliance_cost.py all
+python scripts/random_mandates.py 40      # ~30 min on 2 cores
+python scripts/stats_checks.py
+python scripts/summarise_round3.py
+python scripts/verify.py
 python scripts/make_tables.py
 cd paper && pdflatex main && bibtex main && pdflatex main && pdflatex main
 ```

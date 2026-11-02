@@ -138,8 +138,11 @@ and already at $1.5/N$ for US stocks.
 \input{sections/extended}
 
 \FloatBarrier
+\input{sections/round3}
+
+\FloatBarrier
 \section{Discussion}\label{sec:discussion}
-Four lessons emerge. First, \emph{HRP is not deployable as-is} under realistic mandates: it
+Five lessons emerge. First, \emph{HRP is not deployable as-is} under realistic mandates: it
 breached the constraints at 48--100\% of rebalances in all six universes, and the clipping
 fix used in practice still failed at up to 46\% (27\% on average with quarterly
 rebalancing). Second, \emph{how} constraints are enforced matters as much as \emph{whether}
@@ -151,7 +154,11 @@ weight must be replaced. Third, building constraints into the bisection, while e
 provably feasible, is inferior to separating risk allocation from constraint enforcement.
 Fourth, neither the in-bisection approach nor a scenario-robust projection fixed the
 regime-change weakness; constrained minimum variance remains the method to beat on
-realised returns.
+realised returns, and the Model Confidence Set cannot separate any compliant method on
+returns. Fifth, the case for CA-HRP rests on properties that hold broadly and can be proven:
+exact compliance, noise damping, interpretable compliance costs and well-calibrated risk.
+Its return advantage, by contrast, is specific to strongly binding, correlation-aligned group
+constraints, as the random-mandate and placebo study shows.
 
 \paragraph{Limitations.} The stock universes are survivorship-biased because they contain
 current large caps; this affects all methods equally. The gains of CA-HRP are concentrated

@@ -1,0 +1,22 @@
+\begin{table}[!htbp]\centering\small
+\caption{Random mandates (40 per universe, half with scrambled group labels). Share of mandates in which CA-HRP has a higher Sharpe ratio than each competitor, mean Sharpe difference with HRP-Proj, and share in which CA-HRP's volatility is not higher than HRP-Proj's.}\label{tab:random}
+\setlength{\tabcolsep}{3.5pt}\begin{tabular}{ll r rrr r r}\toprule
+Universe & Groups & $n$ & \multicolumn{3}{c}{CA-HRP wins vs} & $\Delta$SR & Vol $\le$\\
+\cmidrule(lr){4-6}
+ & & & Proj & Clip & MinVar-C & vs Proj & Proj\\\midrule
+Countries & true & 20 & 30\% & 25\% & 30\% & -0.002 & 90\%\\
+Countries & scrambled & 20 & 25\% & 30\% & 25\% & -0.005 & 90\%\\
+ETFs & true & 20 & 90\% & 95\% & 10\% & +0.076 & 100\%\\
+ETFs & scrambled & 20 & 75\% & 95\% & 30\% & +0.035 & 100\%\\
+NIFTY & true & 20 & 45\% & 40\% & 70\% & +0.001 & 70\%\\
+NIFTY & scrambled & 20 & 45\% & 40\% & 55\% & -0.002 & 40\%\\
+US & true & 20 & 60\% & 55\% & 65\% & +0.002 & 95\%\\
+US & scrambled & 20 & 70\% & 70\% & 85\% & +0.009 & 95\%\\
+All & all & 160 & 55\% & 56\% & 46\% & +0.014 & 85\%\\
+\midrule
+\multicolumn{8}{l}{\emph{By how often HRP breaches the mandate:}}\\
+\multicolumn{2}{l}{HRP breach share (-0.01, 0.25]} & 21 & 48\% & & & +0.004 & \\
+\multicolumn{2}{l}{HRP breach share (0.25, 0.5]} & 17 & 59\% & & & +0.007 & \\
+\multicolumn{2}{l}{HRP breach share (0.5, 0.75]} & 21 & 33\% & & & -0.004 & \\
+\multicolumn{2}{l}{HRP breach share (0.75, 1.0]} & 101 & 60\% & & & +0.021 & \\
+\bottomrule\end{tabular}\end{table}

@@ -113,3 +113,48 @@ def test_split_glitch_repair():
     fixed = repair_split_glitches(p)
     assert np.allclose(fixed["a"].values, x)
     assert np.allclose(fixed["b"].values, x)
+
+
+def test_kkt_identity_and_attribution():
+    R, groups = random_problem(2)
+    from cahrp.estimators import estimate
+    cov = estimate(R, "lw")
+    tgt = hrp(cov).weights
+    c = make_constraints(groups, upper=0.10, group_max=0.28, group_min={"g1": 0.26})
+    a = optim.projection_attribution(tgt, cov, c)
+    linear = sum(v for k, v in a["terms"].items() if k != "turnover")
+    assert abs(linear - a["fstar"]) < 1e-7 * max(1.0, a["fstar"])      # exact identity, no turnover
+    assert np.allclose(a["w"], optim.risk_projection(tgt, cov, c), atol=1e-7)
+
+
+@pytest.mark.parametrize("seed", range(5))
+def test_projection_is_non_expansive(seed):
+    R, groups = random_problem(seed)
+    from cahrp.estimators import estimate
+    cov = estimate(R, "lw")
+    n = len(groups)
+    S = cov / np.trace(cov) * n + 1e-4 * np.eye(n)
+    c = make_constraints(groups, upper=0.09, group_max=0.27)
+    rng = np.random.default_rng(seed)
+    t1 = rng.dirichlet(np.ones(n))
+    t2 = rng.dirichlet(np.ones(n) * 0.3)
+    p1, p2 = optim.risk_projection(t1, cov, c), optim.risk_projection(t2, cov, c)
+    nrm = lambda x: np.sqrt(x @ S @ x)
+    assert nrm(p1 - p2) <= nrm(t1 - t2) * (1 + 1e-5) + 1e-7
+
+
+def test_no_lookahead_small():
+    import pandas as pd
+    from cahrp.backtest import run_backtest
+    from cahrp.strategies import ca_hrp
+    rng = np.random.default_rng(1)
+    idx = pd.bdate_range("2015-01-01", periods=520)
+    groups = ["a", "a", "b", "b", "c", "c"]
+    rets = pd.DataFrame(rng.normal(0, 0.01, (520, 6)) * [1, 2, 1, 3, 1, 2], index=idx, columns=list("uvwxyz"))
+    c = make_constraints(groups, upper=0.30, group_max=0.40, turnover_max=0.3)
+    cut = idx[400]
+    a = run_backtest(rets, ca_hrp, c)
+    noisy = rets.copy()
+    noisy.loc[noisy.index > cut] = rng.normal(0, 0.05, noisy.loc[noisy.index > cut].shape)
+    b = run_backtest(noisy, ca_hrp, c)
+    assert np.array_equal(a.weights.loc[:cut].values, b.weights.loc[:cut].values)
