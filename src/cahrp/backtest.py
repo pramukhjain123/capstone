@@ -67,22 +67,22 @@ def run_backtest(rets: pd.DataFrame, strategy, c: Constraints, lookback: int = 2
     t0 = time.time()
     for t in range(start, len(idx)):
         d = idx[t]
+        if w is not None:
+            # day-t return earned by the weights held over day t, then drift
+            r = R[t]
+            gross.append((d, float(w @ r)))
+            w = w * (1 + r)
+            w = w / w.sum()
         if d in rebal:
+            # trade at the close of day t; cost is charged to day t
             window = R[t - lookback + 1: t + 1]
             target = np.asarray(strategy(window, c, w), dtype=float)
             target = np.clip(target, 0, None)
             target /= target.sum()
-            prev = w if w is not None else target
-            to_rec[d] = float(np.abs(target - prev).sum()) if w is not None else 0.0
+            to_rec[d] = float(np.abs(target - w).sum()) if w is not None else 0.0
             w_rec[d] = target
             v_rec[d] = violations(target, c, w)
             w = target
-            continue          # trade at close; returns accrue from next day
-        r = R[t]
-        port = float(w @ r)
-        gross.append((d, port))
-        w = w * (1 + r)
-        w = w / w.sum()
     secs = time.time() - t0
     g = pd.Series(dict(gross)).sort_index()
     return BacktestResult(

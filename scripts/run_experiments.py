@@ -68,6 +68,14 @@ def stability(n_boot=30, seed=7):
     pd.DataFrame(rows).to_csv(RAW / "stability.csv", index=False)
 
 
+def feasible(c) -> bool:
+    import cvxpy as cp
+    w = cp.Variable(c.n)
+    prob = cp.Problem(cp.Minimize(0), optim._constraint_list(w, c, None))
+    prob.solve(solver="CLARABEL")
+    return prob.status == "optimal"
+
+
 def tightness():
     """Feasibility and distortion as constraints tighten: compare how far each
     constrained-HRP method moves from the unconstrained HRP risk allocation."""
@@ -82,6 +90,9 @@ def tightness():
             gm = gm * mult / 2.5 if mult < 2.5 else gm
             c = universe_constraints(u, groups, upper=mult / n, group_max=max(gm, 1.0 / len(set(groups)) + 0.02),
                                      turnover_max=None)
+            if not feasible(c):
+                print(f"[tightness] {u} cap {mult}/N infeasible - skipped", flush=True)
+                continue
             for t in dates:
                 win = R[t - 251: t + 1]
                 cov_s = estimate(win, "sample")
@@ -96,8 +107,10 @@ def tightness():
                     v = violations(w, c)
                     rc = w * (cov_l @ w)
                     rc = rc / rc.sum()
+                    dlt = w - base.weights
                     rows.append({"universe": u, "upper_x_n": mult, "date": rets.index[t], "method": k,
                                  "violation": v["box"] + v["group"],
+                                 "te_hrp": float(np.sqrt(dlt @ cov_l @ dlt * 252)),
                                  "risk_conc": float((rc ** 2).sum() * n),
                                  "port_vol": float(np.sqrt(w @ cov_l @ w * 252))})
         print(f"[tightness] {u}", flush=True)

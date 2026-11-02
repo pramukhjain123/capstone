@@ -145,7 +145,7 @@ def main():
         t = pd.read_csv(RAW / "tightness.csv")
         fig, axes = plt.subplots(1, 3, figsize=(15, 4))
         for ax, u in zip(axes, universe_names()):
-            s = t[t.universe == u].groupby(["upper_x_n", "method"])["risk_conc"].mean().unstack()
+            s = t[t.universe == u].groupby(["upper_x_n", "method"])["te_hrp"].mean().unstack() * 100
             for m in s.columns:
                 ax.plot(s.index, s[m], marker="o", lw=2.2 if m == "CA-HRP" else 1.2,
                         color="black" if m == "CA-HRP" else None, label=m)
@@ -153,9 +153,11 @@ def main():
             ax.invert_xaxis()
             ax.set_title(UNIVERSES[u]["label"])
             ax.grid(alpha=0.3)
-        axes[0].set_ylabel("risk concentration (1 = equal risk)")
+        axes[0].set_ylabel("ex-ante tracking error to HRP (% p.a.)")
         axes[-1].legend()
         fig.tight_layout()
+        t.groupby(["universe", "upper_x_n", "method"])[["violation", "te_hrp", "port_vol"]].mean()\
+            .unstack().to_csv(TAB / "tightness.csv")
         fig.savefig(FIG / "tightness.pdf")
         fig.savefig(FIG / "tightness.png", dpi=150)
         plt.close(fig)

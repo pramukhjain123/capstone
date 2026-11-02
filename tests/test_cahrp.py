@@ -62,3 +62,24 @@ def test_plain_hrp_matches_reference_properties():
     res = hrp(np.cov(R, rowvar=False))
     assert abs(res.weights.sum() - 1) < 1e-12
     assert (res.weights > 0).all()
+
+
+def test_backtest_charges_costs_and_keeps_every_day():
+    import pandas as pd
+    from cahrp.backtest import run_backtest
+    rng = np.random.default_rng(0)
+    idx = pd.bdate_range("2015-01-01", periods=600)
+    rets = pd.DataFrame(rng.normal(0, 0.01, (600, 5)), index=idx, columns=list("abcde"))
+    c = make_constraints(list("aabbc"), upper=1.0, group_max=1.0)
+    flip = {"k": 0}
+
+    def strat(R, c_, wp):  # alternates between two portfolios -> positive turnover
+        flip["k"] += 1
+        return np.array([1, 0, 0, 0, 0.0]) if flip["k"] % 2 else np.array([0, 1, 0, 0, 0.0])
+
+    res = run_backtest(rets, strat, c, lookback=252)
+    first = res.turnover.index.min()
+    assert len(res.gross) == (rets.index > first).sum()          # no day skipped
+    assert res.turnover.iloc[1:].min() > 1.5
+    diff = res.gross.sum() - res.net(50).sum()
+    assert np.isclose(diff, res.turnover.iloc[1:].sum() * 50 / 1e4)
