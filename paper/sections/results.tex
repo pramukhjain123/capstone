@@ -23,7 +23,12 @@ HRP-Clip is significant ($p=0.01$); against HRP-Proj and equal weight the $p$-va
 0.13 and 0.12. Among all constrained methods, only constrained minimum variance has a higher
 Sharpe ratio (0.935), a difference that is far from significant ($p=0.34$). CA-HRP's
 realised tracking error to HRP (6.4\%) is the lowest of the HRP-family methods, as its
-construction intends.
+construction intends. The composition explains why. Averaged over all rebalances,
+HRP-Proj spreads the weight it removes from bonds almost evenly (about 5\% in each
+non-bond fund), whereas CA-HRP keeps the bond budget but shifts it from short-term to
+intermediate and long Treasuries (IEF 13\%, TLT 9\%), whose negative correlation with
+equities hedges the risk it must now take, and holds gold (13\%), broad commodities
+(12\%) and the S\&P~500 (11\%) as its main risky positions.
 
 The solver-free CA-HRP-B performs like the Euclidean projection (0.750) but with four
 times the turnover. Its bisection handles constraints by pushing excess weight down the

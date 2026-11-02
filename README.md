@@ -22,6 +22,22 @@ A solver-free variant, **CA-HRP-B**, clips each bisection split into a provably
 non-empty *capacity interval* so box limits hold exactly by construction
 (Proposition 1 in the paper).
 
+## Headline results
+
+Read the full paper: [`paper/main.pdf`](paper/main.pdf)
+
+| Multi-asset ETFs (constraints bind) | Sharpe (full) | Sharpe (held-out test) | Vol | Max DD | Constraint breaches |
+|---|---|---|---|---|---|
+| HRP (unconstrained) | 0.833 | 0.830 | 2.0% | −8.8% | 100% of rebalances |
+| HRP-Clip (common fix) | 0.709 | 0.802 | 9.2% | −22.8% | 46% |
+| HRP-Proj (Euclidean) | 0.764 | 0.805 | 9.9% | −22.8% | 0% |
+| Constrained min-variance | 0.935 | 0.977 | 7.3% | −17.5% | 0% |
+| **CA-HRP (this work)** | **0.908** | **0.929** | **7.4%** | **−18.8%** | **0%** |
+
+All figures are net of 10 bps transaction costs. In the NIFTY 50 and US large-cap universes,
+where the constraints rarely bind, CA-HRP matches HRP and is the top method for US stocks
+(Sharpe 0.793). Across 630 rebalances CA-HRP never breached a constraint.
+
 ## Repository layout
 
 | Path | Contents |
