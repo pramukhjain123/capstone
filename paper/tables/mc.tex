@@ -1,0 +1,14 @@
+\begin{table*}[!htbp]\centering\small
+\caption{Monte Carlo study with a known covariance (40 assets, 5 clusters, 200 replications per cell). True Sharpe ratio and true volatility (\%) of the estimated portfolio, and true tracking error (\%) to HRP computed on the true covariance. Best value per column among constrained methods in bold.}\label{tab:mc}
+\setlength{\tabcolsep}{4pt}\begin{tabular}{l rrr rrr rrr}\toprule
+ & \multicolumn{3}{c}{True Sharpe ratio} & \multicolumn{3}{c}{True volatility} & \multicolumn{3}{c}{True TE to true HRP}\\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-10}
+Method (Student-$t_5$) & $T$=126 & 252 & 504 & 126 & 252 & 504 & 126 & 252 & 504\\\midrule
+EW & 0.722 & 0.722 & 0.722 & 12.62 & 12.62 & 12.62 & 12.49 & 12.49 & 12.49\\
+MVO-C & 0.680 & 0.683 & 0.684 & 14.00 & 13.80 & 13.86 & 13.85 & 13.65 & 13.71\\
+MinVar-C & 0.808 & 0.809 & 0.811 & \textbf{6.63} & \textbf{6.52} & 6.44 & \textbf{6.28} & 6.17 & 6.09\\
+HRP-Clip & 0.806 & 0.806 & 0.808 & 7.74 & 7.74 & 7.72 & 7.39 & 7.39 & 7.37\\
+HRP-Proj & 0.804 & 0.804 & 0.804 & 8.53 & 8.54 & 8.52 & 8.18 & 8.20 & 8.18\\
+\textbf{CA-HRP} & \textbf{0.809} & \textbf{0.813} & \textbf{0.820} & 6.66 & 6.52 & \textbf{6.43} & 6.32 & \textbf{6.17} & \textbf{6.04}\\
+CA-HRP-R & 0.808 & 0.808 & 0.811 & 6.73 & 6.64 & 6.57 & 6.39 & 6.31 & 6.22\\
+\bottomrule\end{tabular}\end{table*}

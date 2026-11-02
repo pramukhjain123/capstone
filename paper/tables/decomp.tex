@@ -1,0 +1,25 @@
+\begin{table}[!htbp]\centering\small
+\caption{Which constraints matter? Sharpe ratio (net of 10\,bps) when only some constraint families are imposed. Best HRP-family method per row in bold.}\label{tab:decomp}
+\setlength{\tabcolsep}{4pt}\begin{tabular}{ll rrr}\toprule
+Universe & Constraints & HRP-Clip & HRP-Proj & CA-HRP\\\midrule
+\multirow{4}{*}{ETFs} & box only & 0.777 & 0.802 & \textbf{0.853}\\
+ & groups only & 0.684 & 0.745 & \textbf{0.972}\\
+ & box + groups & 0.709 & 0.764 & \textbf{0.910}\\
+ & all (+ turnover) & 0.709 & 0.764 & \textbf{0.908}\\
+\midrule
+\multirow{4}{*}{India ETFs} & box only & \textbf{1.314} & 1.312 & 1.300\\
+ & groups only & 1.269 & 1.257 & \textbf{1.273}\\
+ & box + groups & 1.269 & 1.257 & \textbf{1.273}\\
+ & all (+ turnover) & 1.269 & 1.257 & \textbf{1.276}\\
+\midrule
+\multirow{4}{*}{US sectors} & box only & 0.614 & 0.612 & \textbf{0.628}\\
+ & groups only & 0.626 & 0.635 & \textbf{0.639}\\
+ & box + groups & 0.613 & 0.620 & \textbf{0.628}\\
+ & all (+ turnover) & 0.613 & 0.619 & \textbf{0.628}\\
+\midrule
+\multirow{4}{*}{US} & box only & 0.775 & 0.774 & \textbf{0.792}\\
+ & groups only & 0.777 & 0.776 & \textbf{0.795}\\
+ & box + groups & 0.775 & 0.774 & \textbf{0.793}\\
+ & all (+ turnover) & 0.775 & 0.775 & \textbf{0.793}\\
+\bottomrule
+\end{tabular}\end{table}

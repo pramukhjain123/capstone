@@ -1,0 +1,141 @@
+\section{Extended Evaluation}\label{sec:extended}
+
+After the main study was complete and the method frozen, we ran a second, broader round of
+tests designed to probe its weaknesses rather than its strengths. All constraint sets and
+the CA-HRP-R scenario choice were fixed before any of these results were computed.
+
+\subsection{External validation on three new universes}
+We added three universes that played no role in any design decision: six Indian
+exchange-traded funds (Nifty~50, Bank, Junior, PSU Bank, Nasdaq-100 and Gold BeES; April
+2011 -- October 2026) under a balanced-fund mandate (gold $\le$ 25\%, international equity
+$\le$ 35\%, Indian equity between 40\% and 80\%, single fund $\le$ 35\%); the ten US sector
+SPDR funds (June 2000 -- October 2026), grouped as cyclical or defensive with defensive
+sectors capped at 50\% and single sectors at 20\%; and nineteen single-country equity funds
+(October 2004 -- October 2026) grouped into four regions, each capped at 40\% with single
+countries at 10\%. Yahoo Finance records two short-lived unadjusted unit splits in the
+Indian funds (December 2019 and June 2021), visible as $-90\%$ / $+900\%$ return pairs; we
+detect such pairs automatically and rescale the affected prices by the implied split ratio
+(10 or 100). No other universe is affected.
+
+Table~\ref{tab:external} reports the results. Unconstrained HRP would breach these mandates
+at 94\%, 92\% and 97\% of rebalances respectively, and HRP-Clip still breaches them at 1\%,
+14\% and 9\%. CA-HRP is fully compliant. Its Sharpe ratio is above HRP-Proj in the Indian
+(1.276 vs 1.257) and sector (0.628 vs 0.619) universes and slightly below it for countries
+(0.428 vs 0.436), and in every universe it has the lowest volatility of the three HRP fixes.
+Constrained minimum variance (Indian ETFs) and mean--variance (sectors) post the best Sharpe
+ratios. The external evidence therefore confirms the pattern of the main study: CA-HRP is a
+reliable way to make HRP compliant, with gains that scale with how hard the constraints
+bind, but it does not dominate optimisation-based methods.
+
+\input{tables/external}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{../results/figures/wealth_external.pdf}
+\caption{Growth of one unit of wealth (log scale), net of 10\,bps, in the three external
+universes.}
+\label{fig:wealth-ext}
+\end{figure}
+
+\subsection{Statistical precision across six universes}
+Table~\ref{tab:ci} and Figure~\ref{fig:ci} give bootstrap confidence intervals for the
+Sharpe-ratio difference between CA-HRP and its competitors. Only one interval excludes
+zero: CA-HRP versus HRP-Clip in the multi-asset ETF universe ($+0.20$, 95\% interval
+$[+0.03,+0.35]$). The point estimate against HRP-Proj is positive in five of six universes
+and is large only for multi-asset ETFs ($+0.145$, $[-0.04,+0.32]$). Against constrained
+minimum variance it is negative in five of six universes but never significant. We
+therefore claim reliability and lower risk, not superior returns.
+
+\input{tables/ci}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.85\linewidth]{../results/figures/sharpe_ci.pdf}
+\caption{Sharpe-ratio difference of CA-HRP minus each competitor, with 95\% block-bootstrap
+intervals, for all six universes.}
+\label{fig:ci}
+\end{figure}
+
+\subsection{Does regime-robustness help?}
+CA-HRP-R (Section~\ref{sec:robust}) was designed to address the 2022 weakness. It did not
+help. Its Sharpe ratio is lower than CA-HRP's in all six universes, though never by more than
+0.025, and it trades more (2.09 vs 1.25 annual turnover in the multi-asset universe).
+In the 2022 rates shock it lost 18.1\% in the multi-asset universe against 17.2\% for CA-HRP.
+The reason is visible in the validation study (Table~\ref{tab:robustdesign}): the only
+scenario that would have anticipated 2022, the hedges-fail stress covariance, made the
+portfolio much more conservative in normal times and was rejected on validation data.
+Robustness to a regime that the estimation window has never seen cannot be bought cheaply
+with covariance scenarios alone; we report this as a negative result.
+
+\subsection{Rebalancing frequency}
+Table~\ref{tab:freq} repeats the comparison with weekly and quarterly rebalancing (turnover
+cap of 30\% per rebalance in both cases). CA-HRP satisfies all constraints at all
+frequencies, while HRP-Clip breaches them at 9\% (weekly), 14\% (monthly) and 27\%
+(quarterly) of rebalances on average across universes. Over the 18 frequency--universe
+combinations, CA-HRP beats HRP-Proj in 12 and is the best HRP-based method in 10, while
+constrained minimum variance beats CA-HRP in 16. The multi-asset ranking (CA-HRP clearly
+ahead of the other HRP fixes, slightly behind minimum variance) holds at every frequency.
+
+\input{tables/freq}
+
+\subsection{Which constraints matter?}
+Table~\ref{tab:decomp} imposes the constraint families one at a time. In the multi-asset
+universe almost all of CA-HRP's advantage comes from the \emph{group} constraints: with
+group caps and floors alone its Sharpe ratio is 0.972 against 0.745 for HRP-Proj and 0.684
+for HRP-Clip, whereas with per-asset caps alone the gap is much smaller (0.853 vs 0.802).
+This is consistent with Proposition~\ref{prop:te}(d): group caps remove a large block of
+correlated weight at once, which is exactly where choosing replacements by covariance
+rather than uniformly pays off. With per-asset caps alone in the Indian ETF universe,
+CA-HRP is slightly worse than the simple fixes (1.300 vs 1.312--1.314). HRP-Clip never breaches
+per-asset caps on their own; its breaches come from group caps and floors (36\% of
+rebalances with groups alone in the multi-asset universe) and, in the sector universe, only
+from the turnover budget that it ignores.
+
+\input{tables/decomp}
+
+\subsection{Monte Carlo evidence with a known covariance}
+Backtests mix estimation error with luck. To isolate the former we simulate 40 assets in
+five correlated clusters, one of which is a low-volatility, negatively correlated ``bond''
+block, so that HRP on the \emph{true} covariance puts 90\% in that block and breaches a
+per-asset cap of $2.5/N$ and group caps of 30\%. Groups coincide with clusters except for two
+assets per cluster, so constraints cut across the tree. Every asset has an annualised Sharpe
+ratio of 0.4. For each of 200 replications per cell we draw $T\in\{126,252,504\}$ daily
+returns (Gaussian or Student-$t_5$), estimate each method, and evaluate the resulting
+portfolio under the true parameters.
+
+Table~\ref{tab:mc} and Figure~\ref{fig:mc} show the Student-$t$ case (the Gaussian case is
+almost identical). CA-HRP has the highest true Sharpe ratio of all methods in every cell
+(0.809--0.820 under fat tails, 0.813--0.822 under normality). Among the HRP-based methods it
+has the lowest true tracking error to the oracle HRP portfolio (6.0--6.3\%, against
+7.3--7.4\% for HRP-Clip and 8.2\% for HRP-Proj), on par with constrained minimum variance
+(within 0.05 percentage points). Its true volatility also matches constrained minimum
+variance (6.4--6.7\%), while HRP-Proj is 8.5\% and constrained mean--variance
+13.7--14.3\%. The cross-replication standard
+deviation of the true Sharpe ratio is below 0.01, so these differences are precisely
+estimated. In this controlled setting, which isolates the constraint-handling problem the
+paper is about, CA-HRP is the best method.
+
+\input{tables/mc}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.9\linewidth]{../results/figures/montecarlo.pdf}
+\caption{Monte Carlo (Student-$t_5$): true tracking error to the oracle HRP portfolio and
+true volatility as a function of the estimation window.}
+\label{fig:mc}
+\end{figure}
+
+\subsection{Computational cost}
+Figure~\ref{fig:runtime} reports the median time per rebalance for random universes of
+$N=10$ to $400$ assets with ten groups and a turnover cap. CA-HRP takes 17\,ms at $N=50$ and
+0.27\,s at $N=400$, the same order as constrained minimum variance (0.25\,s). The
+solver-free CA-HRP-B takes 0.15\,s at $N=400$ and the regime-robust CA-HRP-R 1.4\,s, so the
+robust variant is the only one whose cost grows noticeably. All are negligible for monthly
+rebalancing.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.55\linewidth]{../results/figures/runtime.pdf}
+\caption{Median computation time per rebalance against the number of assets (log--log).}
+\label{fig:runtime}
+\end{figure}

@@ -135,20 +135,30 @@ and already at $1.5/N$ for US stocks.
 \end{figure}
 
 \FloatBarrier
+\input{sections/extended}
+
+\FloatBarrier
 \section{Discussion}\label{sec:discussion}
-Three lessons emerge. First, \emph{HRP is not deployable as-is} under realistic mandates:
-it breaches constraints at up to every rebalance, and the clipping fix used in practice still
-fails often. Second, \emph{how} constraints are enforced matters as much as \emph{whether}
+Four lessons emerge. First, \emph{HRP is not deployable as-is} under realistic mandates: it
+breached the constraints at 48--100\% of rebalances in all six universes, and the clipping
+fix used in practice still failed at up to 46\% (27\% on average with quarterly
+rebalancing). Second, \emph{how} constraints are enforced matters as much as \emph{whether}
 they are: the same HRP target, projected with a risk-aware metric instead of a Euclidean one,
-gives a portfolio with 25\% less volatility and a higher Sharpe ratio, out of sample and in
-the held-out period. Third, building constraints into the bisection, while elegant and
+gives a portfolio with 25\% less volatility and a higher Sharpe ratio where constraints bind,
+lower or equal volatility in every universe, and the best true Sharpe ratio in a controlled
+simulation. The gain comes mostly from group constraints, where whole blocks of correlated
+weight must be replaced. Third, building constraints into the bisection, while elegant and
 provably feasible, is inferior to separating risk allocation from constraint enforcement.
+Fourth, neither the in-bisection approach nor a scenario-robust projection fixed the
+regime-change weakness; constrained minimum variance remains the method to beat on
+realised returns.
 
 \paragraph{Limitations.} The stock universes are survivorship-biased because they contain
 current large caps; this affects all methods equally. The gains of CA-HRP are concentrated
 in settings where constraints bind strongly; when they do not, it reduces to HRP, which is
 by design. Most Sharpe differences are not statistically significant at conventional
 levels, which is typical for portfolio comparisons over 15--20 years, and constrained
-minimum variance remains a strong benchmark. Finally, the tracking-error projection
-inherits the weakness of any covariance-based hedge, visible in 2022 when stock--bond
-correlation turned positive.
+minimum variance remains a strong benchmark. The tracking-error projection inherits the
+weakness of any covariance-based hedge, visible in 2022 when stock--bond correlation turned
+positive, and our regime-robust extension did not remove it. All data come from a single
+public source (Yahoo Finance), which needed one automated correction for unadjusted splits.

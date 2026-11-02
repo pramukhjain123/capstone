@@ -1,0 +1,17 @@
+\begin{table*}[!htbp]\centering\small
+\caption{External validation on three universes that were added after the method was frozen (net of 10\,bps). Vol and MaxDD in \%; Viol = share of rebalances breaching a constraint. Best constrained Sharpe ratio per universe in bold.}\label{tab:external}
+\setlength{\tabcolsep}{4pt}\begin{tabular}{l rrrr rrrr rrrr}\toprule
+ & \multicolumn{4}{c}{India ETFs} & \multicolumn{4}{c}{US sectors} & \multicolumn{4}{c}{Countries}\\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}\cmidrule(lr){10-13}
+Method & Sharpe & Vol & MaxDD & Viol & Sharpe & Vol & MaxDD & Viol & Sharpe & Vol & MaxDD & Viol\\\midrule
+EW & 1.086 & 13.7 & -31.1 & 0\% & 0.586 & 18.3 & -55.2 & 0\% & 0.432 & 22.8 & -61.7 & 100\%\\
+HRP & 1.336 & 10.5 & -21.5 & 94\% & 0.641 & 15.7 & -45.9 & 92\% & 0.427 & 21.1 & -59.5 & 97\%\\
+\midrule
+MinVar-C & \textbf{1.321} & 10.9 & -24.9 & 0\% & 0.653 & 15.7 & -48.1 & 0\% & 0.435 & 20.1 & -60.8 & 0\%\\
+MVO-C & 1.052 & 14.5 & -28.1 & 0\% & \textbf{0.658} & 17.0 & -47.8 & 0\% & 0.386 & 22.1 & -64.8 & 0\%\\
+HRP-Clip & 1.269 & 11.8 & -25.1 & 1\% & 0.613 & 16.6 & -49.1 & 14\% & 0.435 & 21.5 & -60.4 & 9\%\\
+HRP-Proj & 1.257 & 11.9 & -25.6 & 0\% & 0.619 & 16.5 & -48.6 & 0\% & \textbf{0.436} & 21.5 & -60.1 & 0\%\\
+CA-HRP-B & 1.255 & 11.9 & -25.2 & 0\% & 0.603 & 16.7 & -48.9 & 0\% & 0.412 & 21.6 & -61.0 & 0\%\\
+\textbf{CA-HRP} & 1.276 & 11.3 & -24.9 & 0\% & 0.628 & 16.2 & -47.6 & 0\% & 0.428 & 21.2 & -60.0 & 0\%\\
+CA-HRP-R & 1.275 & 11.3 & -25.6 & 0\% & 0.625 & 16.2 & -47.4 & 0\% & 0.426 & 21.2 & -60.1 & 0\%\\
+\bottomrule\end{tabular}\end{table*}

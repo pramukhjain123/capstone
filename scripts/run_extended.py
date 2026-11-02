@@ -101,8 +101,8 @@ def true_model(N=40, K=5, seed=0):
     np.fill_diagonal(corr, 1.0)
     vol = np.where(block == 0, rng.uniform(0.03, 0.07, N), rng.uniform(0.15, 0.40, N)) / np.sqrt(252)
     cov = corr * np.outer(vol, vol)
-    # mild expected returns proportional to volatility (Sharpe ~0.4 per asset)
-    mu = 0.4 * vol
+    # daily expected returns giving every asset an annualised Sharpe ratio of 0.4
+    mu = 0.4 * vol / np.sqrt(252)
     # groups = blocks, except two assets per block are relabelled to cut across the tree
     groups = [f"G{k}" for k in block]
     for k in range(K):

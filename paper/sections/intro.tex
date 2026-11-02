@@ -43,17 +43,25 @@ hedge rather than uniformly (Proposition~\ref{prop:te}).
 \item \textbf{A transparent evaluation protocol.} The method design was selected on a
 validation period only and then frozen; we report a separate held-out test period, all
 constraint sets were fixed before any backtest was run, and all code and data are public.
-\item \textbf{Evidence on three universes.} On 20 multi-asset ETFs (2008--2026), 43 NIFTY~50
-stocks (2011--2026) and 47 US large caps (2006--2026), CA-HRP satisfies every constraint at
-every rebalance. Where constraints bind, it is the strongest member of the HRP family and
-is competitive with constrained minimum variance; where they rarely bind, it matches HRP.
+\item \textbf{Evidence on six universes and in simulation.} On 20 multi-asset ETFs
+(2008--2026), 43 NIFTY~50 stocks (2011--2026) and 47 US large caps (2006--2026), and on three
+external-validation universes added after the method was frozen (Indian ETFs, US sector
+funds and global country funds), CA-HRP satisfies every constraint at every rebalance and at
+every rebalancing frequency. Where constraints bind, it is the strongest member of the HRP
+family; where they rarely bind, it matches HRP. In a Monte Carlo study with a known
+covariance it has the highest true Sharpe ratio of all methods.
+\item \textbf{A regime-robust variant and two negative results.} We propose a worst-case
+tracking-error projection over covariance scenarios with a guarantee over their convex hull
+(Proposition~\ref{prop:robust}), and report honestly that it does not improve on CA-HRP,
+and that embedding constraints inside the bisection performs worse than projecting
+afterwards.
 \end{enumerate}
 
 The rest of the paper is organised as follows. Section~\ref{sec:related} reviews related
 work, Section~\ref{sec:setting} states the problem, Section~\ref{sec:method} presents the
 method and its properties, Section~\ref{sec:design} describes the data and experimental
-protocol, Section~\ref{sec:results} reports results, and Section~\ref{sec:conclusion}
-concludes.
+protocol, Section~\ref{sec:results} reports the main results, Section~\ref{sec:extended}
+the extended evaluation, and Section~\ref{sec:conclusion} concludes.
 
 \section{Related Work}\label{sec:related}
 

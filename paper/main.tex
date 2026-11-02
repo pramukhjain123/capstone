@@ -31,17 +31,22 @@ impose: per-asset limits, sector or asset-class caps and floors, and turnover bu
 propose Constraint-Aware HRP (CA-HRP), which keeps HRP's hierarchical risk allocation as a
 target and maps it to the feasible portfolio with minimum ex-ante tracking error to it. We
 prove that this projection is unique, leaves compliant HRP portfolios unchanged, and
-redistributes excess weight as a covariance-based hedge. We also introduce a solver-free
-capacity-aware bisection and prove that it always meets per-asset bounds exactly. In a
-walk-forward study on 20 multi-asset ETFs (2008--2026), 43 NIFTY~50 stocks (2011--2026)
-and 47 US large caps (2006--2026), with the design chosen on a validation period and a
-held-out test period, CA-HRP satisfies every constraint at every rebalance, whereas HRP
-breaches them at up to 100\% of rebalances and the common clip-and-renormalise fix at up to
-46\%. Where constraints bind, CA-HRP raises the Sharpe ratio from 0.76 to 0.91 relative to
-Euclidean projection, with 25\% lower volatility and smaller drawdowns, and is competitive
-with constrained minimum variance while producing more stable weights. Where constraints
-rarely bind, it matches HRP. An ablation shows that the risk-aware projection metric, not
-the choice of estimator or clustering rule, drives the gains.
+redistributes excess weight as a covariance-based hedge. We also prove that a solver-free
+capacity-aware bisection always meets per-asset bounds exactly, and we study a
+regime-robust projection with a worst-case guarantee over a convex set of covariance
+matrices. The design is fixed on a validation period and then tested on a held-out period,
+on three universes added only after the method was frozen (Indian ETFs, US sectors and
+global country funds), at three rebalancing frequencies, and in a Monte Carlo study with a
+known covariance --- six universes and more than 1{,}300 monthly rebalances from 2001 to
+2026 in total. CA-HRP satisfies every constraint at every rebalance, whereas HRP breaches
+them at 48--100\% of rebalances and the common clip-and-renormalise fix at up to 46\%.
+Where constraints bind hardest, CA-HRP raises the Sharpe ratio from 0.76 to 0.91 relative to
+Euclidean projection, with 25\% lower volatility; it has the lowest or equal-lowest volatility
+of the HRP fixes in all six universes and the highest true Sharpe ratio of all methods in the
+simulation. It does not, however, beat constrained minimum variance on realised returns, and
+the regime-robust variant did not help in the 2022 stock--bond correlation shift. Most gains
+come from group constraints, and the risk-aware projection metric, not the estimator or
+clustering rule, drives them.
 
 \medskip\noindent\textbf{Keywords:} hierarchical risk parity, portfolio optimisation,
 constrained allocation, tracking error, robust estimation, convex optimisation.
@@ -60,16 +65,20 @@ to restore feasibility or distort the risk allocation. Constraint-Aware HRP sepa
 two problems: HRP decides how risk should be allocated, and a tracking-error projection
 finds the compliant portfolio closest to that allocation in risk terms. The method has
 clean theoretical properties, runs in milliseconds per rebalance, satisfied every
-constraint in more than 600 rebalances across three markets, and improved risk-adjusted
-returns exactly where constraints bind, including on a held-out test period. We also
-proved that constraints can be embedded directly in the recursive bisection with an exact
-feasibility guarantee, but found that doing so is empirically inferior, a useful negative
-result for the growing literature on hierarchical allocation.
+constraint in more than 1{,}300 monthly rebalances across six markets (and at weekly and
+quarterly frequencies), improved risk-adjusted returns where constraints bind, including on
+a held-out test period, and was the best method in a controlled simulation. Evidence from
+three universes added after the design was frozen confirms that its gains scale with how
+hard the constraints bind. We also report two negative results that we believe are useful
+for the literature on hierarchical allocation: embedding constraints directly in the
+recursive bisection, although provably feasible, performs worse than projecting afterwards;
+and robustness to correlation regimes the estimation window has never seen cannot be
+obtained simply by adding covariance scenarios.
 
-Future work includes projection metrics that adapt to regime changes in correlations, such
-as the 2022 stock--bond shift, the use of CA-HRP with factor-model covariance estimates for
-larger universes, and extending the capacity analysis to non-linear constraints such as
-tracking-error or CVaR budgets.
+Future work includes projection metrics that learn regime changes in correlations, the use
+of CA-HRP with factor-model covariance estimates for universes of thousands of assets, and
+extending the capacity analysis to non-linear constraints such as tracking-error or CVaR
+budgets.
 
 \paragraph{Code and data availability.} All code, data and scripts that reproduce every
 table and figure are available at \url{https://github.com/pramukhjain123/capstone}.
@@ -88,6 +97,14 @@ within noise. The initial design (``cap+tree (v0)'') was the weakest in the mult
 universe.
 
 \input{tables/design}
+
+Table~\ref{tab:robustdesign} shows the corresponding study for the regime-robust variant,
+run later on the same validation windows. A first run of this study contained a bug: the
+hedges-fail stress matrix was not positive semi-definite, so the solver failed and returned
+the infeasible HRP target. We repaired the matrix (eigenvalue clipping), added a feasible
+fallback and a unit test, and reran the study; the selection was unchanged.
+
+\input{tables/robustdesign}
 
 \section{Turn-of-month returns in the NIFTY universe}
 Daily returns on the last trading day of the month are unusually large in the NIFTY sample

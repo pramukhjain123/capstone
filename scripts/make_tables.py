@@ -162,7 +162,7 @@ def design_table():
     (OUT / "design.tex").write_text("\n".join(lines).replace("(=HRP-Proj, LW)", "(LW)"))
 
 
-if __name__ == "__main__":
+def _run_all():
     main_table()
     test_table()
     ablation_table()
@@ -170,3 +170,168 @@ if __name__ == "__main__":
     stress_table()
     design_table()
     print("tables written to", OUT)
+
+
+# ------------------------------------------------------------------ extended study
+EXT = {"india_etf": "India ETFs", "sector": "US sectors", "country": "Countries"}
+ALL6 = {"etf": "ETFs", "nifty": "NIFTY", "us": "US", "india_etf": "India ETFs",
+        "sector": "US sectors", "country": "Countries"}
+ORDER_EXT = ["EW", "HRP", "MinVar-C", "MVO-C", "HRP-Clip", "HRP-Proj", "CA-HRP-B", "CA-HRP", "CA-HRP-R"]
+
+
+def external_table():
+    t = pd.read_csv(TAB / "main6_results.csv")
+    lines = [r"\begin{table*}[!htbp]\centering\small",
+             r"\caption{External validation on three universes that were added after the method "
+             r"was frozen (net of 10\,bps). Vol and MaxDD in \%; Viol = share of rebalances breaching "
+             r"a constraint. Best constrained Sharpe ratio per universe in bold.}\label{tab:external}",
+             r"\setlength{\tabcolsep}{4pt}\begin{tabular}{l rrrr rrrr rrrr}\toprule",
+             " & " + " & ".join(r"\multicolumn{4}{c}{" + v + "}" for v in EXT.values()) + r"\\",
+             r"\cmidrule(lr){2-5}\cmidrule(lr){6-9}\cmidrule(lr){10-13}",
+             "Method" + " & Sharpe & Vol & MaxDD & Viol" * 3 + r"\\\midrule"]
+    best = {}
+    for u in EXT:
+        s = t[(t.universe == u) & t.method.isin(CONSTRAINED | {"CA-HRP-R"})]
+        best[u] = s.loc[s.Sharpe.idxmax(), "method"]
+    for m in ORDER_EXT:
+        cells = []
+        for u in EXT:
+            r = t[(t.universe == u) & (t.method == m)].iloc[0]
+            sh = f"{r.Sharpe:.3f}"
+            if best[u] == m:
+                sh = r"\textbf{" + sh + "}"
+            cells += [sh, pct(r.Vol), pct(r.MaxDD), pct(r.ViolRate, 0) + r"\%"]
+        name = r"\textbf{CA-HRP}" if m == "CA-HRP" else m
+        lines.append(name + " & " + " & ".join(cells) + r"\\")
+        if m == "HRP":
+            lines.append(r"\midrule")
+    lines += [r"\bottomrule\end{tabular}\end{table*}"]
+    (OUT / "external.tex").write_text("\n".join(lines))
+
+
+def ci_table():
+    ci = pd.read_csv(TAB / "main6_sharpe_ci.csv")
+    comps = ["HRP-Proj", "HRP-Clip", "MinVar-C", "EW", "CA-HRP-R"]
+    lines = [r"\begin{table}[!htbp]\centering\small",
+             r"\caption{Annualised Sharpe-ratio difference of CA-HRP minus each competitor, with 95\% "
+             r"circular-block-bootstrap intervals (21-day blocks, 2{,}000 draws). Intervals excluding "
+             r"zero in bold.}\label{tab:ci}",
+             r"\resizebox{\linewidth}{!}{\begin{tabular}{l" + "c" * len(comps) + r"}\toprule",
+             "Universe & " + " & ".join(comps) + r"\\\midrule"]
+    for u, lab in ALL6.items():
+        cells = []
+        for cmp_ in comps:
+            r = ci[(ci.universe == u) & (ci.vs == cmp_)].iloc[0]
+            txt = f"{r['diff']:+.3f} [{r.lo:+.2f}, {r.hi:+.2f}]"
+            if r.lo > 0 or r.hi < 0:
+                txt = r"\textbf{" + txt + "}"
+            cells.append(txt)
+        lines.append(lab + " & " + " & ".join(cells) + r"\\")
+    lines += [r"\bottomrule\end{tabular}}\end{table}"]
+    (OUT / "ci.tex").write_text("\n".join(lines))
+
+
+def frequency_table():
+    f = pd.read_csv(TAB / "frequency.csv")
+    ms = ["EW", "MinVar-C", "HRP-Clip", "HRP-Proj", "CA-HRP", "CA-HRP-R"]
+    lines = [r"\begin{table*}[!htbp]\centering\small",
+             r"\caption{Sharpe ratio by rebalancing frequency (W = weekly, M = monthly, Q = quarterly), "
+             r"net of 10\,bps, all six universes. The first column also gives HRP-Clip's share of rebalances "
+             r"with a constraint breach, pooled over universes (CA-HRP: 0\% at every frequency).}\label{tab:freq}",
+             r"\setlength{\tabcolsep}{3.5pt}\begin{tabular}{ll rrrrrr}\toprule",
+             r"Freq. & Universe & EW & MinVar-C & HRP-Clip & HRP-Proj & CA-HRP & CA-HRP-R\\\midrule"]
+    for fr in ["W", "M", "Q"]:
+        for i, (u, lab) in enumerate(ALL6.items()):
+            s = f[(f.freq == fr) & (f.universe == u)].set_index("method")["Sharpe"]
+            hrp_best = s[["HRP-Clip", "HRP-Proj", "CA-HRP", "CA-HRP-R"]].idxmax()
+            cells = []
+            for m in ms:
+                v = f"{s[m]:.3f}"
+                cells.append(r"\textbf{" + v + "}" if m == hrp_best else v)
+            vr = f[(f.freq == fr) & (f.method == "HRP-Clip")].ViolRate.mean()
+            first = (r"\multirow{6}{*}{" + fr + r" (Clip viol. " + pct(vr, 0) + r"\%)}") if i == 0 else ""
+            lines.append(f"{first} & {lab} & " + " & ".join(cells) + r"\\")
+        lines.append(r"\midrule" if fr != "Q" else r"\bottomrule")
+    lines += [r"\end{tabular}\end{table*}"]
+    (OUT / "freq.tex").write_text("\n".join(lines).replace(r"\multirow{6}{*}{W", r"\multirow{6}{*}{\shortstack{W").replace(r"\multirow{6}{*}{M", r"\multirow{6}{*}{\shortstack{M").replace(r"\multirow{6}{*}{Q", r"\multirow{6}{*}{\shortstack{Q").replace(" (Clip viol.", r"\\(Clip").replace(r"\%)}", r"\%)}}"))
+
+
+def decomposition_table():
+    d = pd.read_csv(TAB / "decomposition.csv")
+    subsets = ["box only", "groups only", "box + groups", "all (+ turnover)"]
+    ms = ["HRP-Clip", "HRP-Proj", "CA-HRP"]
+    unis = {"etf": "ETFs", "india_etf": "India ETFs", "sector": "US sectors", "us": "US"}
+    lines = [r"\begin{table}[!htbp]\centering\small",
+             r"\caption{Which constraints matter? Sharpe ratio (net of 10\,bps) when only some constraint "
+             r"families are imposed. Best HRP-family method per row in bold.}\label{tab:decomp}",
+             r"\setlength{\tabcolsep}{4pt}\begin{tabular}{ll rrr}\toprule",
+             r"Universe & Constraints & HRP-Clip & HRP-Proj & CA-HRP\\\midrule"]
+    for u, lab in unis.items():
+        for i, sb in enumerate(subsets):
+            s = d[(d.universe == u) & (d.subset == sb)].set_index("method")["Sharpe"]
+            best = s[ms].idxmax()
+            cells = [(r"\textbf{" + f"{s[m]:.3f}" + "}") if m == best else f"{s[m]:.3f}" for m in ms]
+            first = (r"\multirow{4}{*}{" + lab + "}") if i == 0 else ""
+            lines.append(f"{first} & {sb} & " + " & ".join(cells) + r"\\")
+        lines.append(r"\midrule" if u != "us" else r"\bottomrule")
+    lines += [r"\end{tabular}\end{table}"]
+    (OUT / "decomp.tex").write_text("\n".join(lines))
+
+
+def montecarlo_table():
+    m = pd.read_csv(TAB / "montecarlo.csv")
+    ms = ["EW", "MVO-C", "MinVar-C", "HRP-Clip", "HRP-Proj", "CA-HRP", "CA-HRP-R"]
+    lines = [r"\begin{table*}[!htbp]\centering\small",
+             r"\caption{Monte Carlo study with a known covariance (40 assets, 5 clusters, 200 replications "
+             r"per cell). True Sharpe ratio and true volatility (\%) of the estimated portfolio, and true "
+             r"tracking error (\%) to HRP computed on the true covariance. Best value per column among "
+             r"constrained methods in bold.}\label{tab:mc}",
+             r"\setlength{\tabcolsep}{4pt}\begin{tabular}{l rrr rrr rrr}\toprule",
+             r" & \multicolumn{3}{c}{True Sharpe ratio} & \multicolumn{3}{c}{True volatility} & "
+             r"\multicolumn{3}{c}{True TE to true HRP}\\",
+             r"\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-10}",
+             r"Method (Student-$t_5$) & $T$=126 & 252 & 504 & 126 & 252 & 504 & 126 & 252 & 504\\\midrule"]
+    t = m[m.dist == "t5"]
+    cons = ["MVO-C", "MinVar-C", "HRP-Clip", "HRP-Proj", "CA-HRP", "CA-HRP-R"]
+    best = {}
+    for col, fn in [("true_sharpe", "idxmax"), ("true_vol", "idxmin"), ("true_te_hrp", "idxmin")]:
+        for T in [126, 252, 504]:
+            s = t[(t["T"] == T) & t.method.isin(cons)].set_index("method")[col]
+            best[(col, T)] = getattr(s, fn)()
+    for meth in ms:
+        cells = []
+        for col, scale, dig in [("true_sharpe", 1, 3), ("true_vol", 100, 2), ("true_te_hrp", 100, 2)]:
+            for T in [126, 252, 504]:
+                v = t[(t["T"] == T) & (t.method == meth)][col].iloc[0] * scale
+                txt = f"{v:.{dig}f}"
+                cells.append(r"\textbf{" + txt + "}" if best[(col, T)] == meth else txt)
+        name = r"\textbf{CA-HRP}" if meth == "CA-HRP" else meth
+        lines.append(name + " & " + " & ".join(cells) + r"\\")
+    lines += [r"\bottomrule\end{tabular}\end{table*}"]
+    (OUT / "mc.tex").write_text("\n".join(lines))
+
+
+def robust_design_table():
+    d = pd.read_csv(TAB / "design_study_robust_validation.csv")
+    piv = d.pivot(index="variant", columns="universe", values="Sharpe")[["etf", "nifty", "us"]]
+    piv["mean"] = piv.mean(axis=1)
+    lines = [r"\begin{table}[!htbp]\centering\small",
+             r"\caption{Validation-period selection of the CA-HRP-R scenario set (Sharpe, net of 10\,bps). "
+             r"The robust variant with the best mean was adopted before any test-period or "
+             r"external-universe result was computed.}\label{tab:robustdesign}",
+             r"\begin{tabular}{l rrrr}\toprule",
+             r"Variant & ETFs & NIFTY & US & Mean\\\midrule"]
+    for v, r in piv.iterrows():
+        lines.append(f"{v} & {r.etf:.3f} & {r.nifty:.3f} & {r.us:.3f} & {r['mean']:.3f}\\\\")
+    lines += [r"\bottomrule\end{tabular}\end{table}"]
+    (OUT / "robustdesign.tex").write_text("\n".join(lines).replace("{", "{").replace("max{", r"max\{").replace("mean{", r"mean\{").replace("stress}", r"stress\}").replace("short}", r"short\}"))
+
+
+if __name__ == "__main__":
+    _run_all()
+    external_table()
+    ci_table()
+    frequency_table()
+    decomposition_table()
+    montecarlo_table()
+    robust_design_table()

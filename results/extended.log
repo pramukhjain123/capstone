@@ -1,0 +1,554 @@
+[main6] etf       EW            0.1s
+[main6] etf       IVP           0.1s
+[main6] etf       MinVar        1.8s
+[main6] etf       ERC           2.2s
+[main6] etf       HRP           0.4s
+[main6] etf       MinVar-C      2.8s
+[main6] etf       MVO-C         2.5s
+[main6] etf       HRP-Clip      0.5s
+[main6] etf       HRP-Proj      2.8s
+[main6] etf       CA-HRP-B      3.3s
+[main6] etf       CA-HRP        2.7s
+[main6] etf       CA-HRP-R      3.9s
+[main6] nifty     EW            0.1s
+[main6] nifty     IVP           0.1s
+[main6] nifty     MinVar        1.6s
+[main6] nifty     ERC           2.0s
+[main6] nifty     HRP           0.5s
+[main6] nifty     MinVar-C      3.1s
+[main6] nifty     MVO-C         3.3s
+[main6] nifty     HRP-Clip      0.4s
+[main6] nifty     HRP-Proj      3.1s
+[main6] nifty     CA-HRP-B      4.3s
+[main6] nifty     CA-HRP        3.3s
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+[main6] nifty     CA-HRP-R      5.1s
+[main6] us        EW            0.1s
+[main6] us        IVP           0.1s
+[main6] us        MinVar        2.7s
+[main6] us        ERC           2.9s
+[main6] us        HRP           0.6s
+[main6] us        MinVar-C      4.2s
+[main6] us        MVO-C         4.3s
+[main6] us        HRP-Clip      0.7s
+[main6] us        HRP-Proj      4.4s
+[main6] us        CA-HRP-B      6.0s
+[main6] us        CA-HRP        4.7s
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+[main6] us        CA-HRP-R      6.8s
+[main6] india_etf EW            0.1s
+[main6] india_etf IVP           0.1s
+[main6] india_etf MinVar        0.9s
+[main6] india_etf ERC           1.3s
+[main6] india_etf HRP           0.2s
+[main6] india_etf MinVar-C      1.6s
+[main6] india_etf MVO-C         1.8s
+[main6] india_etf HRP-Clip      0.2s
+[main6] india_etf HRP-Proj      1.8s
+[main6] india_etf CA-HRP-B      2.0s
+[main6] india_etf CA-HRP        1.7s
+[main6] india_etf CA-HRP-R      2.4s
+[main6] sector    EW            0.1s
+[main6] sector    IVP           0.1s
+[main6] sector    MinVar        1.7s
+[main6] sector    ERC           2.4s
+[main6] sector    HRP           0.3s
+[main6] sector    MinVar-C      2.8s
+[main6] sector    MVO-C         3.3s
+[main6] sector    HRP-Clip      0.5s
+[main6] sector    HRP-Proj      3.0s
+[main6] sector    CA-HRP-B      3.6s
+[main6] sector    CA-HRP        2.9s
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+[main6] sector    CA-HRP-R      4.2s
+[main6] country   EW            0.1s
+[main6] country   IVP           0.1s
+[main6] country   MinVar        1.6s
+[main6] country   ERC           2.1s
+[main6] country   HRP           0.4s
+[main6] country   MinVar-C      2.5s
+[main6] country   MVO-C         2.7s
+[main6] country   HRP-Clip      0.8s
+[main6] country   HRP-Proj      3.4s
+[main6] country   CA-HRP-B      4.0s
+[main6] country   CA-HRP        3.1s
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+[main6] country   CA-HRP-R      4.1s
+[frequency] W etf
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+[frequency] W nifty
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+[frequency] W us
+[frequency] W india_etf
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+[frequency] W sector
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+[frequency] W country
+[frequency] Q etf
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+[frequency] Q nifty
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+[frequency] Q us
+[frequency] Q india_etf
+[frequency] Q sector
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+[frequency] Q country
+[decompose] etf
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+[decompose] nifty
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+[decompose] us
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+[decompose] india_etf
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+[decompose] sector
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+/home/claude/capstone/src/cahrp/optim.py:142: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  prob.solve(solver=solver)
+[decompose] country
+[montecarlo] normal T=126
+[montecarlo] normal T=252
+[montecarlo] normal T=504
+[montecarlo] t5 T=126
+[montecarlo] t5 T=252
+[montecarlo] t5 T=504
+[runtime] N=10
+[runtime] N=25
+[runtime] N=50
+[runtime] N=100
+[runtime] N=200
+[runtime] N=400

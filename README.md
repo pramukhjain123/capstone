@@ -20,7 +20,9 @@ target and enforces every constraint exactly:
 
 A solver-free variant, **CA-HRP-B**, clips each bisection split into a provably
 non-empty *capacity interval* so box limits hold exactly by construction
-(Proposition 1 in the paper).
+(Proposition 1 in the paper). A regime-robust variant, **CA-HRP-R**, minimises the
+worst-case tracking error over several covariance regimes, with a guarantee over their
+convex hull (Proposition 3); it is reported as a negative result.
 
 ## Headline results
 
@@ -36,18 +38,36 @@ Read the full paper: [`paper/main.pdf`](paper/main.pdf)
 
 All figures are net of 10 bps transaction costs. In the NIFTY 50 and US large-cap universes,
 where the constraints rarely bind, CA-HRP matches HRP and is the top method for US stocks
-(Sharpe 0.793). Across 630 rebalances CA-HRP never breached a constraint.
+(Sharpe 0.793).
+
+**Extended evaluation (phase 2):**
+- Three external-validation universes added after the method was frozen (Indian ETFs,
+  US sector ETFs, global country ETFs): CA-HRP beats the Euclidean fix in 5 of 6 universes
+  and has the lowest or equal-lowest volatility of the HRP fixes in all six; constrained
+  min-variance remains the toughest benchmark.
+- CA-HRP never breached a constraint in more than 1,300 monthly rebalances, nor at weekly or
+  quarterly frequency; the common clip fix breached them at 9–27% of rebalances on average.
+- Monte Carlo with a known covariance (40 assets, 2 return distributions, 3 window
+  lengths, 200 replications each): CA-HRP has the highest true Sharpe ratio of all methods
+  in every setting.
+- Most of the gain comes from group (sector / asset-class) constraints.
+- Bootstrap confidence intervals, rebalancing frequency, constraint decomposition and
+  runtime scaling up to 400 assets are all in the paper.
 
 ## Repository layout
 
 | Path | Contents |
 |---|---|
-| `data/raw/` | Daily adjusted closes + group maps for 3 universes (multi-asset ETFs, NIFTY 50 stocks, US large caps), 2006–2026 |
+| `data/raw/` | Daily adjusted closes + group maps for 6 universes (multi-asset ETFs, NIFTY 50 stocks, US large caps; external: Indian ETFs, US sector ETFs, country ETFs), 2000–2026 |
 | `src/cahrp/` | Library: estimators, HRP & capacity-aware bisection, projections, baselines, backtester, metrics |
 | `scripts/download_data.py` | Re-downloads the price data (Yahoo Finance) |
 | `scripts/design_study.py` | Chooses the CA-HRP design on the **validation** period only |
 | `scripts/run_experiments.py` | All backtests, ablations, lookback robustness, stability and constraint-tightness studies |
-| `scripts/summarise.py` | Builds every table and figure |
+| `scripts/summarise.py` | Builds the phase-1 tables and figures |
+| `scripts/design_study_robust.py` | Chooses the CA-HRP-R scenario set on the validation period |
+| `scripts/run_extended.py` | Phase 2: six universes, rebalancing frequency, constraint decomposition, Monte Carlo, runtime |
+| `scripts/summarise_extended.py` | Phase-2 tables and figures |
+| `scripts/make_tables.py` | Writes every LaTeX table in the paper directly from the result CSVs |
 | `results/tables/`, `results/figures/` | Outputs used in the paper |
 | `paper/` | LaTeX source and compiled PDF of the research paper |
 | `tests/` | Unit tests (feasibility guarantees, projection identity, HRP sanity) |
@@ -60,6 +80,10 @@ python -m pytest -q tests
 python scripts/design_study.py          # validation-period design choice
 python scripts/run_experiments.py all   # ~15 min on a laptop
 python scripts/summarise.py
+python scripts/design_study_robust.py
+python scripts/run_extended.py all       # ~40 min
+python scripts/summarise_extended.py
+python scripts/make_tables.py
 cd paper && pdflatex main && bibtex main && pdflatex main && pdflatex main
 ```
 
