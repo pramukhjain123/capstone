@@ -1,0 +1,149 @@
+\FloatBarrier
+\section{Results}\label{sec:results}
+
+\input{tables/main}
+
+\subsection{Constraint compliance}
+Table~\ref{tab:main} first answers the practical question. Unconstrained HRP breaches the
+mandate at 100\% of rebalances in the multi-asset universe, 48\% for NIFTY and 66\% for
+US stocks. The common practitioner fix, HRP-Clip, still breaches constraints at 46\%, 8\%
+and 8\% of rebalances respectively: alternating clipping and group rescaling can cycle
+when per-asset and group limits interact, and it ignores turnover entirely. Every
+optimisation-based method, including both CA-HRP variants, satisfies all constraints at
+every rebalance, and CA-HRP never needed the turnover fallback.
+
+\subsection{Performance where constraints bind}
+The multi-asset universe is where constraints bite hardest: HRP would hold on average 86\%
+in a single short-term Treasury fund (Figure~\ref{fig:groups}), so the 15\% fund cap, the
+40\% asset-class cap and the 20\% equity floor force a very different portfolio. Here the
+way the constraints are enforced matters a great deal. CA-HRP reaches a Sharpe ratio of
+0.908 with 7.4\% volatility and a $-18.8\%$ maximum drawdown, against 0.764, 9.9\% and
+$-22.8\%$ for the Euclidean projection (HRP-Proj) and 0.709 for HRP-Clip. The difference with
+HRP-Clip is significant ($p=0.01$); against HRP-Proj and equal weight the $p$-values are
+0.13 and 0.12. Among all constrained methods, only constrained minimum variance has a higher
+Sharpe ratio (0.935), a difference that is far from significant ($p=0.34$). CA-HRP's
+realised tracking error to HRP (6.4\%) is the lowest of the HRP-family methods, as its
+construction intends.
+
+The solver-free CA-HRP-B performs like the Euclidean projection (0.750) but with four
+times the turnover. Its bisection handles constraints by pushing excess weight down the
+tree, so the portfolio concentrates in whichever volatile branch has spare capacity
+(commodities, Figure~\ref{fig:groups} and Section~\ref{sec:method}). This is the central
+negative finding that motivated the final design: constraints are best enforced
+\emph{after} the risk allocation, in a risk metric, not inside the bisection.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{../results/figures/wealth_curves.pdf}
+\caption{Growth of one unit of wealth (log scale), net of 10\,bps costs.}
+\label{fig:wealth}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{../results/figures/etf_group_weights.pdf}
+\caption{Asset-class weights in the multi-asset universe. Unconstrained HRP (left) is
+almost entirely in bonds, far above the 40\% cap. CA-HRP (right) holds bonds at the cap
+and allocates the remainder by tracking-error projection.}
+\label{fig:groups}
+\end{figure}
+
+\subsection{Performance where constraints rarely bind}
+In the two stock universes HRP breaches the limits at about half of the rebalances, but only
+by small amounts: the realised tracking error between HRP and any of its constrained
+versions is at most 1\%. All HRP-based methods are therefore statistically indistinguishable,
+which is what Proposition~\ref{prop:te}(b) predicts as the constraints become slack. CA-HRP posts the highest Sharpe ratio
+of all eleven methods for US large caps (0.793) and ties HRP for NIFTY (1.369 vs 1.368),
+where constrained minimum variance is marginally higher (1.401, $p=0.62$). In other words,
+CA-HRP costs nothing when HRP is already compliant and helps when it is not.
+
+\subsection{Held-out test period}
+Table~\ref{tab:test} repeats the comparison on the period after the validation window,
+which played no role in choosing the design. The ranking is unchanged. In the multi-asset
+universe CA-HRP's test Sharpe is 0.929, against 0.805 for HRP-Proj, 0.802 for HRP-Clip,
+0.783 for equal weight and 0.977 for constrained minimum variance, with the lowest
+volatility of any HRP-family method. In stocks CA-HRP again matches HRP.
+
+\input{tables/test}
+
+\subsection{Ablation}
+Table~\ref{tab:ablation} isolates each design choice. In the multi-asset universe the
+\emph{distance metric} drives almost the whole gain: replacing the full-covariance
+tracking-error metric by its diagonal lowers the Sharpe ratio from 0.908 to 0.777, and the
+Euclidean metric to 0.742. Adding capacity-aware bisection before the projection lowers it
+to 0.861 and nearly doubles turnover; adding a tree-consistency penalty has a similar
+effect. The choice of covariance estimator, linkage rule and split rule matters little
+(Sharpe 0.910--0.922), so the method is not sensitive to those HRP details. Removing the
+turnover cap barely changes performance, showing that the cap is rarely binding for CA-HRP
+and does not drive its results. In the stock universes no ablation moves the Sharpe ratio
+by more than 0.04.
+
+\input{tables/ablation}
+
+\subsection{Robustness}
+\paragraph{Costs and estimation window.} Table~\ref{tab:robust} shows the multi-asset
+advantage of CA-HRP over the other HRP-family methods survives 50\,bps costs (0.840 vs 0.739
+for HRP-Proj) and both shorter (126-day) and longer (504-day) estimation windows, where
+CA-HRP improves on HRP-Proj by 0.14 and 0.19 Sharpe points respectively. Constrained minimum
+variance remains a strong competitor throughout.
+
+\paragraph{Stability of weights.} We re-estimate every method on 30 block-bootstrapped
+versions of the estimation window at eight dates per universe and measure how much the
+weights move. CA-HRP is far more stable than mean--variance (instability 0.16--0.22 vs
+0.70--0.78) and more stable than constrained minimum variance in every universe (e.g.\
+0.218 vs 0.324 for NIFTY). In the multi-asset universe HRP-Proj is the most stable, because
+it is anchored near equal weight; its stability comes at the price of a portfolio that
+tracks HRP poorly and has higher volatility.
+
+\input{tables/robust}
+
+\paragraph{Stress periods.} Table~\ref{tab:stress} reports cumulative returns in three
+crises. In the COVID crash CA-HRP lost 6.9\% in the multi-asset universe, against 14.0\% for
+HRP-Proj, 13.7\% for HRP-Clip and 14.9\% for equal weight, and it was flat in the GFC window.
+The 2022 rates shock is the exception: CA-HRP's hedge tilt towards intermediate and long
+Treasuries, which protected it in 2020, lost 17.2\% when bonds and equities fell together,
+slightly more than HRP-Proj ($-15.3\%$). This illustrates the main limitation of any
+covariance-based hedge: it relies on correlations that can break down.
+
+\input{tables/stress}
+
+\paragraph{Tightening the constraints.} Finally, we tighten the per-asset cap from $4/N$ to
+$1.25/N$ (with group caps scaled accordingly) and measure, at twelve dates per universe, how
+far each method's portfolio is from HRP in ex-ante tracking-error terms
+(Figure~\ref{fig:tight}). Settings that are mathematically infeasible (caps of $1.5/N$ and
+$1.25/N$ in the multi-asset universe) are detected by a linear feasibility check and
+skipped; HRP-Clip silently returns infeasible weights in such cases, and even at caps of
+$2.5/N$ and looser it still breaches limits by 1.1--1.9 percentage points on average in the
+multi-asset universe. In that universe CA-HRP has the smallest distortion at every cap
+(7.1--9.2\% versus 10.5--11.9\% for HRP-Proj) and the lowest volatility. In the stock
+universes CA-HRP has a small constant floor of about 0.8\% because its HRP target uses
+shrinkage rather than the sample covariance; at the tightest cap ($1.25/N$) it distorts HRP
+the least in both stock universes (2.2\% vs 2.4--2.5\% for NIFTY, 2.8\% vs 3.2--3.3\% for US),
+and already at $1.5/N$ for US stocks.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{../results/figures/tightness.pdf}
+\caption{Ex-ante tracking error to sample-covariance HRP as the per-asset cap tightens
+(right = tighter). Infeasible settings are omitted.}
+\label{fig:tight}
+\end{figure}
+
+\FloatBarrier
+\section{Discussion}\label{sec:discussion}
+Three lessons emerge. First, \emph{HRP is not deployable as-is} under realistic mandates:
+it breaches constraints at up to every rebalance, and the clipping fix used in practice still
+fails often. Second, \emph{how} constraints are enforced matters as much as \emph{whether}
+they are: the same HRP target, projected with a risk-aware metric instead of a Euclidean one,
+gives a portfolio with 25\% less volatility and a higher Sharpe ratio, out of sample and in
+the held-out period. Third, building constraints into the bisection, while elegant and
+provably feasible, is inferior to separating risk allocation from constraint enforcement.
+
+\paragraph{Limitations.} The stock universes are survivorship-biased because they contain
+current large caps; this affects all methods equally. The gains of CA-HRP are concentrated
+in settings where constraints bind strongly; when they do not, it reduces to HRP, which is
+by design. Most Sharpe differences are not statistically significant at conventional
+levels, which is typical for portfolio comparisons over 15--20 years, and constrained
+minimum variance remains a strong benchmark. Finally, the tracking-error projection
+inherits the weakness of any covariance-based hedge, visible in 2022 when stock--bond
+correlation turned positive.

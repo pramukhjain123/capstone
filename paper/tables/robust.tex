@@ -1,0 +1,14 @@
+\begin{table*}[!htbp]\centering\small
+\caption{Robustness. Left: Sharpe ratio in the multi-asset universe at 50\,bps costs and with 126- and 504-day estimation windows (all universes). Right: weight instability, the mean $L_1$ distance of bootstrapped weights from their average (lower = more stable).}\label{tab:robust}
+\begin{tabular}{l r rrr rrr rrr}\toprule
+ & ETFs & \multicolumn{3}{c}{Window 126 days} & \multicolumn{3}{c}{Window 504 days} & \multicolumn{3}{c}{Weight instability}\\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}\cmidrule(lr){9-11}
+Method & 50\,bps & ETFs & NIFTY & US & ETFs & NIFTY & US & ETFs & NIFTY & US\\\midrule
+EW & 0.750 & 0.535 & 1.197 & 0.794 & 0.701 & 1.196 & 0.775 & -- & -- & --\\
+HRP & 0.705 & 0.622 & 1.288 & 0.786 & 0.932 & 1.287 & 0.767 & 0.068 & 0.230 & 0.227\\
+MinVar-C & 0.868 & 0.703 & 1.392 & 0.801 & 0.936 & 1.341 & 0.730 & 0.185 & 0.324 & 0.318\\
+MVO-C & 0.650 & 0.660 & 1.142 & 0.755 & 0.796 & 1.172 & 0.760 & 0.754 & 0.698 & 0.781\\
+HRP-Clip & 0.614 & 0.479 & 1.293 & 0.786 & 0.800 & 1.288 & 0.767 & 0.209 & 0.222 & 0.214\\
+HRP-Proj & 0.739 & 0.535 & 1.293 & 0.792 & 0.714 & 1.288 & 0.766 & 0.037 & 0.220 & 0.217\\
+\textbf{CA-HRP} & 0.840 & 0.676 & 1.301 & 0.803 & 0.908 & 1.276 & 0.766 & 0.158 & 0.218 & 0.211\\
+\bottomrule\end{tabular}\end{table*}

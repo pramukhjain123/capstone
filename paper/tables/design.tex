@@ -1,0 +1,15 @@
+\begin{table}[h]\centering\small
+\caption{Design study on the validation period only (net of 10\,bps). ``cap'' = capacity-aware bisection; ``tree'' = tree-weighted projection; ``TE'' = tracking-error projection. LW covariance unless stated.}\label{tab:design}
+\begin{tabular}{l rrr rr}\toprule
+ & \multicolumn{3}{c}{Validation Sharpe} & \multicolumn{2}{c}{ETFs}\\
+\cmidrule(lr){2-4}\cmidrule(lr){5-6}
+Variant & ETFs & NIFTY & US & Vol & Turn.\\\midrule
+cap+tree (v0) & 0.605 & 1.737 & 0.639 & 10.2 & 2.59\\
+euclid (LW) & 0.675 & 1.731 & 0.645 & 10.2 & 1.07\\
+cap+euclid & 0.637 & 1.737 & 0.646 & 10.3 & 2.11\\
+diag-var proj & 0.743 & 1.731 & 0.648 & 9.5 & 1.13\\
+TE proj & 0.878 & 1.738 & 0.651 & 7.3 & 1.19\\
+cap+TE proj & 0.750 & 1.737 & 0.651 & 8.6 & 2.45\\
+TE+tree proj & 0.749 & 1.741 & 0.651 & 7.9 & 2.30\\
+TE proj (sample cov) & 0.887 & 1.745 & 0.655 & 7.3 & 1.11\\
+\bottomrule\end{tabular}\end{table}

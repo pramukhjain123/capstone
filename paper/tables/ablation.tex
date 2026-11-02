@@ -1,0 +1,17 @@
+\begin{table}[!htbp]\centering\small
+\caption{Ablation of CA-HRP components (full sample, net of 10\,bps). Each row changes one component of the full method.}\label{tab:ablation}
+\begin{tabular}{l rrr rrr}\toprule
+ & \multicolumn{3}{c}{Sharpe ratio} & \multicolumn{3}{c}{ETFs}\\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Variant & ETFs & NIFTY & US & Vol & Turn. & TE$_{\text{HRP}}$\\\midrule
+CA-HRP (full) & 0.908 & 1.369 & 0.793 & 7.4 & 1.25 & 6.4\\
+\midrule
+sample covariance & 0.922 & 1.372 & 0.781 & 7.3 & 1.22 & 6.4\\
+diagonal metric & 0.777 & 1.366 & 0.791 & 9.2 & 1.14 & 8.5\\
+Euclidean metric & 0.742 & 1.365 & 0.789 & 9.8 & 1.06 & 9.1\\
++ capacity bisection & 0.861 & 1.367 & 0.796 & 8.5 & 2.30 & 7.7\\
++ tree-consistency term & 0.846 & 1.370 & 0.794 & 7.9 & 2.27 & 7.1\\
+no turnover cap & 0.910 & 1.369 & 0.793 & 7.3 & 1.26 & 6.4\\
+Ward linkage & 0.910 & 1.330 & 0.759 & 7.4 & 1.30 & 6.4\\
+dendrogram splits & 0.918 & 1.392 & 0.778 & 7.4 & 1.19 & 6.5\\
+\bottomrule\end{tabular}\end{table}

@@ -7,3 +7,5 @@ paper/*.out
 paper/*.bbl
 paper/*.blg
 paper/*.toc
+paper/build.log
+results/FINISHED

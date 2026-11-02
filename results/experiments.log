@@ -1,0 +1,131 @@
+[main] etf   EW                        0.1s
+[main] etf   IVP                       0.1s
+[main] etf   MinVar                    1.4s
+[main] etf   ERC                       1.7s
+[main] etf   HRP                       0.3s
+[main] etf   MinVar-C                  2.1s
+[main] etf   MVO-C                     2.3s
+[main] etf   HRP-Clip                  0.5s
+[main] etf   HRP-Proj                  2.3s
+[main] etf   CA-HRP-B                  2.9s
+[main] etf   CA-HRP                    2.5s
+[main] nifty EW                        0.1s
+[main] nifty IVP                       0.1s
+[main] nifty MinVar                    1.4s
+[main] nifty ERC                       1.7s
+[main] nifty HRP                       0.4s
+[main] nifty MinVar-C                  2.7s
+[main] nifty MVO-C                     2.8s
+[main] nifty HRP-Clip                  0.5s
+[main] nifty HRP-Proj                  2.8s
+[main] nifty CA-HRP-B                  3.8s
+[main] nifty CA-HRP                    3.2s
+[main] us    EW                        0.1s
+[main] us    IVP                       0.1s
+[main] us    MinVar                    1.9s
+[main] us    ERC                       2.7s
+[main] us    HRP                       0.6s
+[main] us    MinVar-C                  3.8s
+[main] us    MVO-C                     4.0s
+[main] us    HRP-Clip                  0.7s
+[main] us    HRP-Proj                  3.6s
+[main] us    CA-HRP-B                  5.1s
+[main] us    CA-HRP                    4.3s
+[ablation] etf   CA-HRP (full)             2.5s
+[ablation] etf   sample covariance         2.2s
+[ablation] etf   diagonal metric           2.5s
+[ablation] etf   Euclidean metric          2.4s
+[ablation] etf   + capacity bisection      2.9s
+[ablation] etf   + tree-consistency term    3.1s
+[ablation] etf   no turnover cap           2.2s
+[ablation] etf   Ward linkage              2.5s
+[ablation] etf   dendrogram splits         2.6s
+[ablation] nifty CA-HRP (full)             3.3s
+[ablation] nifty sample covariance         3.0s
+[ablation] nifty diagonal metric           2.9s
+[ablation] nifty Euclidean metric          3.2s
+[ablation] nifty + capacity bisection      3.9s
+[ablation] nifty + tree-consistency term    3.7s
+[ablation] nifty no turnover cap           2.7s
+[ablation] nifty Ward linkage              3.0s
+[ablation] nifty dendrogram splits         3.5s
+[ablation] us    CA-HRP (full)             4.5s
+[ablation] us    sample covariance         4.2s
+[ablation] us    diagonal metric           3.9s
+[ablation] us    Euclidean metric          4.0s
+[ablation] us    + capacity bisection      5.1s
+[ablation] us    + tree-consistency term    5.1s
+[ablation] us    no turnover cap           3.7s
+[ablation] us    Ward linkage              4.6s
+[ablation] us    dendrogram splits         4.6s
+[lookback504] etf   EW                        0.1s
+[lookback504] etf   HRP                       0.3s
+[lookback504] etf   HRP-Clip                  0.5s
+[lookback504] etf   HRP-Proj                  2.2s
+[lookback504] etf   MinVar-C                  2.1s
+[lookback504] etf   MVO-C                     2.2s
+[lookback504] etf   CA-HRP                    2.3s
+[lookback504] nifty EW                        0.1s
+[lookback504] nifty HRP                       0.4s
+[lookback504] nifty HRP-Clip                  0.4s
+[lookback504] nifty HRP-Proj                  2.7s
+[lookback504] nifty MinVar-C                  2.5s
+[lookback504] nifty MVO-C                     2.7s
+[lookback504] nifty CA-HRP                    3.0s
+[lookback504] us    EW                        0.1s
+[lookback504] us    HRP                       0.5s
+[lookback504] us    HRP-Clip                  0.6s
+[lookback504] us    HRP-Proj                  3.4s
+[lookback504] us    MinVar-C                  3.4s
+[lookback504] us    MVO-C                     3.8s
+[lookback504] us    CA-HRP                    4.1s
+[lookback126] etf   EW                        0.1s
+[lookback126] etf   HRP                       0.3s
+[lookback126] etf   HRP-Clip                  0.5s
+[lookback126] etf   HRP-Proj                  2.3s
+[lookback126] etf   MinVar-C                  2.2s
+[lookback126] etf   MVO-C                     2.3s
+[lookback126] etf   CA-HRP                    2.6s
+[lookback126] nifty EW                        0.1s
+[lookback126] nifty HRP                       0.4s
+[lookback126] nifty HRP-Clip                  0.5s
+[lookback126] nifty HRP-Proj                  2.8s
+[lookback126] nifty MinVar-C                  2.9s
+[lookback126] nifty MVO-C                     3.1s
+[lookback126] nifty CA-HRP                    3.5s
+[lookback126] us    EW                        0.1s
+[lookback126] us    HRP                       0.5s
+[lookback126] us    HRP-Clip                  0.7s
+[lookback126] us    HRP-Proj                  4.0s
+[lookback126] us    MinVar-C                  3.9s
+[lookback126] us    MVO-C                     4.5s
+[lookback126] us    CA-HRP                    4.4s
+[stability] etf 2009-08-05
+[stability] etf 2012-01-19
+[stability] etf 2014-07-08
+[stability] etf 2016-12-20
+[stability] etf 2019-06-10
+[stability] etf 2021-11-22
+[stability] etf 2024-05-10
+[stability] etf 2026-10-30
+[stability] nifty 2012-08-14
+[stability] nifty 2014-08-27
+[stability] nifty 2016-09-14
+[stability] nifty 2018-09-19
+[stability] nifty 2020-10-06
+[stability] nifty 2022-10-11
+[stability] nifty 2024-10-22
+[stability] nifty 2026-10-30
+[stability] us 2007-08-08
+[stability] us 2010-05-06
+[stability] us 2013-02-04
+[stability] us 2015-10-30
+[stability] us 2018-07-31
+[stability] us 2021-04-29
+[stability] us 2024-01-29
+[stability] us 2026-10-30
+[tightness] etf cap 1.5/N infeasible - skipped
+[tightness] etf cap 1.25/N infeasible - skipped
+[tightness] etf
+[tightness] nifty
+[tightness] us

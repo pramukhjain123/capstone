@@ -1,0 +1,99 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=2.3cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs,multirow,graphicx}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage{placeins}
+
+\newtheorem{proposition}{Proposition}
+\renewcommand{\arraystretch}{1.1}
+
+\title{Constraint-Aware Hierarchical Risk Parity\\for Robust Portfolio Allocation}
+\author{Pramukh Rajendra Jain\\
+\small School of Computer Science and Engineering, Vellore Institute of Technology, Chennai, India\\
+\small \texttt{pramukhjain.9966@gmail.com}}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Hierarchical Risk Parity (HRP) is a popular portfolio construction method that allocates
+capital through a correlation tree instead of inverting a covariance matrix, which makes it
+robust to estimation error. However, HRP cannot respect the constraints that real mandates
+impose: per-asset limits, sector or asset-class caps and floors, and turnover budgets. We
+propose Constraint-Aware HRP (CA-HRP), which keeps HRP's hierarchical risk allocation as a
+target and maps it to the feasible portfolio with minimum ex-ante tracking error to it. We
+prove that this projection is unique, leaves compliant HRP portfolios unchanged, and
+redistributes excess weight as a covariance-based hedge. We also introduce a solver-free
+capacity-aware bisection and prove that it always meets per-asset bounds exactly. In a
+walk-forward study on 20 multi-asset ETFs (2008--2026), 43 NIFTY~50 stocks (2011--2026)
+and 47 US large caps (2006--2026), with the design chosen on a validation period and a
+held-out test period, CA-HRP satisfies every constraint at every rebalance, whereas HRP
+breaches them at up to 100\% of rebalances and the common clip-and-renormalise fix at up to
+46\%. Where constraints bind, CA-HRP raises the Sharpe ratio from 0.76 to 0.91 relative to
+Euclidean projection, with 25\% lower volatility and smaller drawdowns, and is competitive
+with constrained minimum variance while producing more stable weights. Where constraints
+rarely bind, it matches HRP. An ablation shows that the risk-aware projection metric, not
+the choice of estimator or clustering rule, drives the gains.
+
+\medskip\noindent\textbf{Keywords:} hierarchical risk parity, portfolio optimisation,
+constrained allocation, tracking error, robust estimation, convex optimisation.
+\end{abstract}
+
+\input{sections/intro}
+\input{sections/method}
+\input{sections/design}
+\input{sections/results}
+
+\FloatBarrier
+\section{Conclusion}\label{sec:conclusion}
+We showed that Hierarchical Risk Parity, despite its robustness, cannot be used directly
+under realistic portfolio mandates, and that the ad hoc fixes used in practice either fail
+to restore feasibility or distort the risk allocation. Constraint-Aware HRP separates the
+two problems: HRP decides how risk should be allocated, and a tracking-error projection
+finds the compliant portfolio closest to that allocation in risk terms. The method has
+clean theoretical properties, runs in milliseconds per rebalance, satisfied every
+constraint in more than 600 rebalances across three markets, and improved risk-adjusted
+returns exactly where constraints bind, including on a held-out test period. We also
+proved that constraints can be embedded directly in the recursive bisection with an exact
+feasibility guarantee, but found that doing so is empirically inferior, a useful negative
+result for the growing literature on hierarchical allocation.
+
+Future work includes projection metrics that adapt to regime changes in correlations, such
+as the 2022 stock--bond shift, the use of CA-HRP with factor-model covariance estimates for
+larger universes, and extending the capacity analysis to non-linear constraints such as
+tracking-error or CVaR budgets.
+
+\paragraph{Code and data availability.} All code, data and scripts that reproduce every
+table and figure are available at \url{https://github.com/pramukhjain123/capstone}.
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
+\appendix
+\section{Design study on the validation period}\label{app:design}
+Table~\ref{tab:design} lists the eight configurations compared before the method was frozen,
+using only data up to the end of the validation window. The tracking-error projection was
+best in the multi-asset universe and tied for best in the stock universes. The
+sample-covariance version scored marginally higher than the Ledoit--Wolf one; we kept
+Ledoit--Wolf, chosen beforehand for its better conditioning, since the difference is
+within noise. The initial design (``cap+tree (v0)'') was the weakest in the multi-asset
+universe.
+
+\input{tables/design}
+
+\section{Turn-of-month returns in the NIFTY universe}
+Daily returns on the last trading day of the month are unusually large in the NIFTY sample
+(an average of 0.42\% for an equal-weight portfolio up to 2018, against 0.07\% on other
+days). All methods trade at the month-end close and earn that day's return with their
+pre-trade weights, so the effect raises all NIFTY Sharpe ratios similarly and does not
+change their ranking.
+
+\end{document}
