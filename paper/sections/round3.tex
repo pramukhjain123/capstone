@@ -95,6 +95,70 @@ CA-HRP against constrained minimum variance (colour: HRP breach share).}
 \end{figure}
 
 
+\subsection{Forward-looking risk from option-implied volatility}\label{sec:iv}
+All risk inputs so far are backward-looking. Option prices, by contrast, embed the market's
+forward-looking view of volatility, which often moves before realised volatility does. We
+therefore test a variant, CA-HRP-IV, that keeps the historical (Ledoit--Wolf) correlations
+but rescales each asset's volatility by the implied-to-realised ratio of the volatility index
+of its asset class:
+\begin{equation}\label{eq:iv}
+\sigma_i^{\mathrm{IV}}(d)=\sigma_i^{\mathrm{hist}}(d)\,\frac{\mathrm{IV}_{k(i)}(d^-)}{\mathrm{RV}_{k(i)}(d^-)},
+\end{equation}
+where $\mathrm{IV}_k$ is the index level on the last trading day strictly before the
+rebalance date $d$ and $\mathrm{RV}_k$ the realised volatility of its underlying over the 252
+preceding days. We use VIX (US and international equity and real estate), VXN (Nasdaq-100),
+GVZ (gold and silver), OVX (oil and broad commodities), MOVE (Treasuries and investment-grade
+credit, with realised volatility measured on daily 10-year yield changes in basis points) and
+India VIX (Indian equity). Assets without a suitable index (high-yield and emerging-market
+bonds) receive the median ratio of the available indices, so that the variance risk premium
+does not make them look artificially safe. The resulting covariance replaces the historical
+one in both the HRP allocation and the projection metric. The one-day lag avoids look-ahead
+across time zones, and the mapping was fixed before any backtest. To attribute any effect to
+the \emph{information} rather than the method, the same covariance is also given to
+constrained minimum variance (MinVar-C-IV).
+
+\begin{proposition}[Scale invariance]\label{prop:scale}
+HRP weights and the CA-HRP projection are unchanged when every volatility is multiplied by
+the same factor $\kappa>0$.
+\end{proposition}
+\begin{proof}
+Correlations, and therefore the tree, are unchanged. Every cluster variance in
+\eqref{eq:alpha} scales by $\kappa^2$, so the split fractions do not change. The projection
+metric in \eqref{eq:te} is normalised by its trace, which removes $\kappa^2$.
+\end{proof}
+
+Proposition~\ref{prop:scale} implies that option information can only change CA-HRP through
+the \emph{relative} implied/realised ratios across asset classes, so a single index such as
+VIX applied to a one-asset-class universe would have no effect; this is why we test it on the
+two multi-asset universes. Both properties, together with the absence of look-ahead in
+\eqref{eq:iv}, are covered by unit tests, and with the ratios set to one the IV code path
+reproduces CA-HRP exactly.
+
+The ratios vary widely (Figure~\ref{fig:iv}): at month-ends they peaked at 2.9 for VIX
+(February 2020), 3.3 for OVX and 3.1 for India VIX (March 2020), and during 2022 MOVE was on
+average 25\% above realised Treasury volatility (monthly range 0.97--1.55). Table~\ref{tab:iv} shows the outcome, which is mixed. Option information did not change
+risk-adjusted returns: CA-HRP-IV has a Sharpe ratio of 0.907 against 0.908 for CA-HRP in the
+multi-asset universe and 1.280 against 1.276 for Indian ETFs, with intervals centred on zero.
+It did improve crash behaviour in the US multi-asset universe, cutting the COVID-crash loss
+from 6.9\% to 5.5\% and the 2022 loss from 17.2\% to 16.4\%, but it worsened the COVID loss for
+Indian ETFs (7.9\% against 5.3\%). It also roughly doubled turnover (2.10 against 1.25 and 1.91
+against 0.98 per year), because implied/realised ratios move from month to month.
+Constrained minimum variance benefited somewhat more from the same information (Sharpe 1.355
+against 1.321 for Indian ETFs). We conclude that implied volatility is a usable, look-ahead-free
+input to CA-HRP whose benefit is limited to some crisis episodes; smoothing the ratios to
+contain turnover is a natural extension, which we leave for future work rather than tune on
+these data.
+
+\input{tables/iv}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{../results/figures/iv_ratios.pdf}
+\caption{Implied-to-realised volatility ratios used by CA-HRP-IV in the multi-asset universe
+(log scale; 1 = implied equals realised).}
+\label{fig:iv}
+\end{figure}
+
 \subsection{Stricter statistics}
 \paragraph{Model Confidence Set.} Table~\ref{tab:stats} applies the Model Confidence Set of
 \citet{hansen2011} (T$_{\max}$ statistic, 21-day block bootstrap, 1{,}000 draws, 90\%

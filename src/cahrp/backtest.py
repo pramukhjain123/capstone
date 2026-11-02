@@ -121,7 +121,10 @@ def run_backtest(rets: pd.DataFrame, strategy, c: Constraints, lookback: int = 2
         if d in rebal:
             # trade at the close of day t; cost is charged to day t
             window = R[t - lookback + 1: t + 1]
-            target = np.asarray(strategy(window, c, w), dtype=float)
+            if getattr(strategy, "needs_date", False):
+                target = np.asarray(strategy(window, c, w, date=d), dtype=float)
+            else:
+                target = np.asarray(strategy(window, c, w), dtype=float)
             target = np.clip(target, 0, None)
             target /= target.sum()
             to_rec[d] = float(np.abs(target - w).sum()) if w is not None else 0.0

@@ -158,3 +158,31 @@ def test_no_lookahead_small():
     noisy.loc[noisy.index > cut] = rng.normal(0, 0.05, noisy.loc[noisy.index > cut].shape)
     b = run_backtest(noisy, ca_hrp, c)
     assert np.array_equal(a.weights.loc[:cut].values, b.weights.loc[:cut].values)
+
+
+def test_common_volatility_scale_invariance():
+    """HRP and the CA-HRP projection are unchanged when every volatility is multiplied by the
+    same factor, so implied volatility only matters through relative (cross-index) ratios."""
+    from cahrp.estimators import estimate
+    R, groups = random_problem(4)
+    cov = estimate(R, "lw")
+    c = make_constraints(groups, upper=0.10, group_max=0.30)
+    for k in [0.5, 1.7, 3.0]:
+        a, b = hrp(cov).weights, hrp(cov * k ** 2).weights
+        assert np.allclose(a, b, atol=1e-12)
+        pa = optim.risk_projection(a, cov, c)
+        pb = optim.risk_projection(b, cov * k ** 2, c)
+        assert np.allclose(pa, pb, atol=1e-6)
+
+
+def test_iv_ratio_uses_only_past_information():
+    import pandas as pd
+    from cahrp import implied
+    iv, und = implied._iv_data()
+    d = pd.Timestamp("2020-03-16")
+    before = implied.iv_ratio("^VIX", d)
+    iv.loc[iv.index >= d, "^VIX"] = 999.0                 # corrupt same-day and future values
+    und["SPY"].loc[und["SPY"].index >= d] = 0.5
+    after = implied.iv_ratio("^VIX", d)
+    implied._iv_data.cache_clear()
+    assert before == after

@@ -70,6 +70,12 @@ where the constraints rarely bind, CA-HRP matches HRP and is the top method for 
   raw constraint audit; 10/11 strict checks pass and the one failure (min-variance solver
   precision) is shown to have negligible impact. Data SHA-256 in `data/MANIFEST.csv`.
 
+**Implied volatility (CA-HRP-IV):** volatilities rescaled by implied/realised ratios of VIX, VXN,
+GVZ, OVX, MOVE and India VIX (data in `data/raw/implied_vol.csv`, code in `src/cahrp/implied.py`,
+experiment in `scripts/iv_experiment.py`). Look-ahead-free and unit-tested; it cut the COVID loss
+in the US multi-asset universe (−6.9% → −5.5%) but not for Indian ETFs, left Sharpe ratios
+unchanged and doubled turnover.
+
 ## Repository layout
 
 | Path | Contents |

@@ -115,3 +115,25 @@ def build_ablations() -> Dict[str, Strategy]:
         "Ward linkage": lambda R, c, wp: ca_hrp(R, c, wp, linkage_method="ward"),
         "dendrogram splits": lambda R, c, wp: ca_hrp(R, c, wp, split="tree"),
     }
+
+
+def ca_hrp_from_cov(cov, c, w_prev):
+    """CA-HRP with an externally supplied covariance (HRP target and projection metric)."""
+    res = hrp(cov, "single", "list")
+    return optim.risk_projection(res.weights, cov, c, w_prev)
+
+
+def build_iv_strategies(universe, tickers):
+    """CA-HRP-IV and MinVar-C-IV: identical to CA-HRP / MinVar-C except that volatilities are
+    rescaled by option-implied volatility (see cahrp.implied)."""
+    from .implied import iv_covariance
+
+    def ca_iv(R, c, wp, date=None):
+        return ca_hrp_from_cov(iv_covariance(R, date, tickers, universe), c, wp)
+
+    def mv_iv(R, c, wp, date=None):
+        return optim.min_variance(iv_covariance(R, date, tickers, universe), c, wp)
+
+    ca_iv.needs_date = True
+    mv_iv.needs_date = True
+    return {"CA-HRP-IV": ca_iv, "MinVar-C-IV": mv_iv}
