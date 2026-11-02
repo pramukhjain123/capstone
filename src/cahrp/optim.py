@@ -79,6 +79,33 @@ def tree_projection(target: np.ndarray, nodes, c: Constraints,
     return _solve(obj, w, c, w_prev, fallback=target)
 
 
+def risk_projection(target: np.ndarray, cov: np.ndarray, c: Constraints,
+                    w_prev: Optional[np.ndarray] = None, nodes=None, gamma: float = 0.5,
+                    tree_weight: float = 0.0, diag_only: bool = False,
+                    ridge: float = 1e-4) -> np.ndarray:
+    """Tracking-error projection (this project).
+
+        min_w  (w - w*)' S (w - w*)  +  tree_weight * sum_k gamma^d_k (a_k'(w - w*))^2
+        s.t.   w feasible
+
+    S = Sigma (full covariance) or diag(Sigma). With S = Sigma the result is the
+    feasible portfolio whose returns track the unconstrained HRP portfolio most
+    closely; excess weight removed from capped assets is re-assigned to the
+    assets that best replicate their risk, instead of being spread uniformly
+    (Euclidean) or pushed down the tree (capacity-only bisection).
+    """
+    n = len(target)
+    S = np.diag(np.diag(cov)) if diag_only else 0.5 * (cov + cov.T)
+    S = S / np.trace(S) * n + ridge * np.eye(n)         # scale-free
+    w = cp.Variable(n)
+    d = w - target
+    obj = cp.quad_form(d, cp.psd_wrap(S))
+    if tree_weight > 0 and nodes is not None:
+        A, om = node_matrix(nodes, n, gamma)
+        obj = obj + tree_weight * cp.sum(cp.multiply(om, cp.square(A @ d)))
+    return _solve(cp.Minimize(obj), w, c, w_prev, fallback=target)
+
+
 def euclidean_projection(target: np.ndarray, c: Constraints,
                          w_prev: Optional[np.ndarray] = None) -> np.ndarray:
     w = cp.Variable(len(target))

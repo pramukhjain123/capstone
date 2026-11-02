@@ -1,4 +1,7 @@
-"""Allocation strategies. Each takes (returns window, constraints, previous weights) -> weights."""
+"""Allocation strategies. Each takes (returns window, constraints, previous weights) -> weights.
+
+Final CA-HRP design was fixed by scripts/design_study.py on the validation period only.
+"""
 from typing import Callable, Dict, Optional
 
 import numpy as np
@@ -12,25 +15,30 @@ Strategy = Callable[[np.ndarray, Constraints, Optional[np.ndarray]], np.ndarray]
 
 
 def ca_hrp(R, c, w_prev, cov_method="lw", linkage_method="single", split="list",
-           capacity=True, projection="tree", gamma=0.5, turnover=True):
+           capacity=False, metric="te", tree_weight=0.0, gamma=0.5, turnover=True):
     """Constraint-Aware HRP.
 
-    1. robust covariance (Ledoit-Wolf shrinkage)
-    2. HRP tree + capacity-aware recursive bisection (box bounds and group caps
-       enter the split rule, box bounds are met exactly)
-    3. hierarchy-consistent projection onto the full feasible set
-       (group floors/caps, turnover) that preserves the top-level risk budget.
+    1. robust covariance estimate (Ledoit-Wolf shrinkage)
+    2. unconstrained HRP allocation (tree clustering + recursive bisection),
+       optionally with capacity-aware bisection
+    3. tracking-error projection onto the feasible set (box, group caps/floors,
+       turnover): the feasible portfolio whose ex-ante returns stay closest to
+       the HRP portfolio.
+
+    metric: "te" (full covariance), "diag" (variances only), "euclid", "tree"
     """
     cov = estimate(R, cov_method)
     res = hrp(cov, linkage_method, split, constraints=c if capacity else None)
-    cc = c
-    if not turnover:
-        cc = Constraints(c.lower, c.upper, c.groups, c.group_max, c.group_min, None)
-    if projection == "tree":
-        return optim.tree_projection(res.weights, res.nodes, cc, w_prev, gamma)
-    if projection == "euclid":
+    cc = c if turnover else Constraints(c.lower, c.upper, c.groups, c.group_max, c.group_min, None)
+    if metric == "te":
+        return optim.risk_projection(res.weights, cov, cc, w_prev, res.nodes, gamma, tree_weight)
+    if metric == "diag":
+        return optim.risk_projection(res.weights, cov, cc, w_prev, diag_only=True)
+    if metric == "euclid":
         return optim.euclidean_projection(res.weights, cc, w_prev)
-    return res.weights
+    if metric == "tree":
+        return optim.tree_projection(res.weights, res.nodes, cc, w_prev, gamma)
+    raise ValueError(metric)
 
 
 def build_strategies() -> Dict[str, Strategy]:
@@ -50,18 +58,20 @@ def build_strategies() -> Dict[str, Strategy]:
     s["HRP-Proj"] = lambda R, c, wp: optim.euclidean_projection(
         hrp(estimate(R, "sample"), "single", "list").weights, c, wp)
     # ---- proposed ----
+    s["CA-HRP-B"] = lambda R, c, wp: ca_hrp(R, c, wp, capacity=True, metric="tree")
     s["CA-HRP"] = lambda R, c, wp: ca_hrp(R, c, wp)
     return s
 
 
 def build_ablations() -> Dict[str, Strategy]:
     return {
-        "CA-HRP": lambda R, c, wp: ca_hrp(R, c, wp),
-        "no LW (sample cov)": lambda R, c, wp: ca_hrp(R, c, wp, cov_method="sample"),
-        "no capacity bisection": lambda R, c, wp: ca_hrp(R, c, wp, capacity=False),
-        "Euclidean projection": lambda R, c, wp: ca_hrp(R, c, wp, projection="euclid"),
+        "CA-HRP (full)": lambda R, c, wp: ca_hrp(R, c, wp),
+        "sample covariance": lambda R, c, wp: ca_hrp(R, c, wp, cov_method="sample"),
+        "diagonal metric": lambda R, c, wp: ca_hrp(R, c, wp, metric="diag"),
+        "Euclidean metric": lambda R, c, wp: ca_hrp(R, c, wp, metric="euclid"),
+        "+ capacity bisection": lambda R, c, wp: ca_hrp(R, c, wp, capacity=True),
+        "+ tree-consistency term": lambda R, c, wp: ca_hrp(R, c, wp, tree_weight=1.0),
         "no turnover cap": lambda R, c, wp: ca_hrp(R, c, wp, turnover=False),
+        "Ward linkage": lambda R, c, wp: ca_hrp(R, c, wp, linkage_method="ward"),
         "dendrogram splits": lambda R, c, wp: ca_hrp(R, c, wp, split="tree"),
-        "gamma=0.25": lambda R, c, wp: ca_hrp(R, c, wp, gamma=0.25),
-        "gamma=1.0": lambda R, c, wp: ca_hrp(R, c, wp, gamma=1.0),
     }
